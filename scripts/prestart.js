@@ -34,9 +34,14 @@ if (!(nodeVersionMajor > minNodeVersionMajor || (nodeVersionMajor == minNodeVers
 }
 
 function check_arguments_passed(cb) {
-  const arguments = (process.argv[2] == null ? '' : process.argv[2]).split(' ');
-  const pidName = (arguments != null && arguments.length > 0 && arguments[0] != null && arguments[0] != '' && (arguments[0] == 'pm2' || arguments[0] == 'forever') ? arguments[0] : 'node');
-  const node_env = (arguments != null && arguments.length > 0 && arguments[1] != null && arguments[1] != '' ? arguments[1] : 'development');
+  // SECURITY: renamed from 'arguments' which shadows the built-in JS arguments object
+  // and can cause subtle bugs in non-strict mode functions
+  const cliArgs = (process.argv[2] == null ? '' : process.argv[2]).split(' ');
+  const pidName = (cliArgs != null && cliArgs.length > 0 && cliArgs[0] != null && cliArgs[0] != '' && (cliArgs[0] == 'pm2' || cliArgs[0] == 'forever') ? cliArgs[0] : 'node');
+  // SECURITY: sanitize node_env — only allow alphanumeric, underscore and hyphen
+  // to prevent shell injection via execSync(`export NODE_ENV=${node_env} && ...`)
+  const rawEnv = (cliArgs != null && cliArgs.length > 0 && cliArgs[1] != null && cliArgs[1] != '' ? cliArgs[1] : 'development');
+  const node_env = /^[a-zA-Z0-9_\-]+$/.test(rawEnv) ? rawEnv : 'development';
 
   // check 1st argument
   if (pidName != null) {

@@ -89,7 +89,7 @@ function check_create_user(cb) {
         });
     })
     .catch((err) => {
-      console.log('Error: Unable to connect to database: %s', dbString);
+      console.log('Error: Unable to connect to database: %s', settings.benchmark.address + ':' + settings.benchmark.port);
       exit(999);
     });
   } else
@@ -229,7 +229,7 @@ check_create_user(function() {
       });
     });
   }).catch((err) => {
-    console.log('Error: Unable to connect to database: %s', dbString);
+    console.log('Error: Unable to connect to database: %s', settings.benchmark.address + ':' + settings.benchmark.port);
     exit(999);
   });
 });

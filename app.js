@@ -70,6 +70,20 @@ settings.plugins.allowed_plugins.forEach(function (plugin) {
   if (plugin.enabled) {
     const pluginName = (plugin.plugin_name == null ? '' : plugin.plugin_name);
 
+    // Prevent path traversal: only allow alphanumeric, hyphens and underscores in plugin name
+    if (!/^[a-zA-Z0-9_-]+$/.test(pluginName)) {
+      console.log(`WARNING: Invalid plugin name "${pluginName}", skipping`);
+      return;
+    }
+
+    // Ensure the resolved path stays within the plugins directory
+    const pluginBase = path.resolve('./plugins');
+    const pluginFullPath = path.resolve(pluginBase, pluginName);
+    if (!pluginFullPath.startsWith(pluginBase + path.sep) && pluginFullPath !== pluginBase) {
+      console.log(`WARNING: Path traversal attempt blocked for plugin "${pluginName}"`);
+      return;
+    }
+
     // check if the plugin exists in the plugins directory
     if (db.fs.existsSync(`./plugins/${pluginName}`)) {
       // check if the plugin's local_plugin_settings file exists
@@ -224,86 +238,59 @@ app.post('/claim', function(req, res) {
 });
 
 function validate_captcha(captcha_enabled, data, cb) {
-  // check if captcha is enabled for the requested feature
-  if (captcha_enabled == true) {
-    // determine the captcha type
-    if (settings.captcha.google_recaptcha3.enabled == true) {
-      if (data.google_recaptcha3 != null) {
-        const request = require('postman-request');
-
-        request({uri: 'https://www.google.com/recaptcha/api/siteverify?secret=' + settings.captcha.google_recaptcha3.secret_key + '&response=' + data.google_recaptcha3, json: true}, function (error, response, body) {
-          if (error) {
-            // an error occurred while trying to validate the captcha
-            return cb(true);
-          } else if (body == null || body == '' || typeof body !== 'object') {
-            // return data is invalid
-            return cb(true);
-          } else if (body.score == null || body.score < settings.captcha.google_recaptcha3.pass_score) {
-            // captcha challenge failed
-            return cb(true);
-          } else {
-            // captcha challenge passed
-            return cb(false);
-          }
-        });
-      } else {
-        // a captcha response wasn't received
-        return cb(true);
-      }
-    } else if (settings.captcha.google_recaptcha2.enabled == true) {
-      if (data.google_recaptcha2 != null) {
-        const request = require('postman-request');
-
-        request({uri: 'https://www.google.com/recaptcha/api/siteverify?secret=' + settings.captcha.google_recaptcha2.secret_key + '&response=' + data.google_recaptcha2, json: true}, function (error, response, body) {
-          if (error) {
-            // an error occurred while trying to validate the captcha
-            return cb(true);
-          } else if (body == null || body == '' || typeof body !== 'object') {
-            // return data is invalid
-            return cb(true);
-          } else if (body.success == null || body.success == false) {
-            // captcha challenge failed
-            return cb(true);
-          } else {
-            // captcha challenge passed
-            return cb(false);
-          }
-        });
-      } else {
-        // a captcha response wasn't received
-        return cb(true);
-      }
-    } else if (settings.captcha.hcaptcha.enabled == true) {
-      if (data.hcaptcha != null) {
-        const request = require('postman-request');
-
-        request({uri: 'https://hcaptcha.com/siteverify?secret=' + settings.captcha.hcaptcha.secret_key + '&response=' + data.hcaptcha, json: true}, function (error, response, body) {
-          if (error) {
-            // an error occurred while trying to validate the captcha
-            return cb(true);
-          } else if (body == null || body == '' || typeof body !== 'object') {
-            // return data is invalid
-            return cb(true);
-          } else if (body.success == null || body.success == false) {
-            // captcha challenge failed
-            return cb(true);
-          } else {
-            // captcha challenge passed
-            return cb(false);
-          }
-        });
-      } else {
-        // a captcha response wasn't received
-        return cb(true);
-      }
-    } else {
-      // no captcha options are enabled
-      return cb(false);
-    }
-  } else {
-    // captcha is not enabled for this feature
+  // If captcha not enabled for this feature, skip validation
+  if (captcha_enabled !== true) {
     return cb(false);
   }
+
+  // Determine which captcha service is enabled and prepare verification URL + secret
+  let service = null;
+  let secret = '';
+  let pass_score = 0.5;
+
+  if (settings.captcha.google_recaptcha3.enabled && data.google_recaptcha3) {
+    service = 'google_recaptcha3';
+    secret = settings.captcha.google_recaptcha3.secret_key;
+    pass_score = settings.captcha.google_recaptcha3.pass_score;
+  } else if (settings.captcha.google_recaptcha2.enabled && data.google_recaptcha2) {
+    service = 'google_recaptcha2';
+    secret = settings.captcha.google_recaptcha2.secret_key;
+  } else if (settings.captcha.hcaptcha.enabled && data.hcaptcha) {
+    service = 'hcaptcha';
+    secret = settings.captcha.hcaptcha.secret_key;
+  } else {
+    // No captcha data submitted – treat as failed validation
+    return cb(true);
+  }
+
+  if (!service || !secret) {
+    return cb(true); // configuration missing
+  }
+
+  // Build POST request – secret key is passed in the body, never in the URL
+  fetch(service === 'hcaptcha' ? 'https://hcaptcha.com/siteverify' : 'https://www.google.com/recaptcha/api/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret: secret, response: data[service] })
+  })
+  .then(response => response.json())
+  .then(body => {
+    if (!body || typeof body !== 'object') {
+      return cb(true);
+    }
+    if (service === 'google_recaptcha3') {
+      if (body.score == null || body.score < pass_score) {
+        return cb(true);
+      }
+      return cb(false);
+    } else {
+      if (body.success == null || body.success === false) {
+        return cb(true);
+      }
+      return cb(false);
+    }
+  })
+  .catch(() => cb(true));
 }
 
 function filter_bad_words(msg, cb) {
@@ -443,7 +430,7 @@ app.use('/ext/getaddress/:hash', function(req, res) {
         if (address) {
           let last_txs = [];
 
-          for (i = 0; i < txs.length; i++) {
+          for (let i = 0; i < txs.length; i++) {
             if (typeof txs[i].txid !== "undefined") {
               let out = new Decimal('0');
               let vin = new Decimal('0');
@@ -576,7 +563,10 @@ app.use('/ext/getcurrentprice', function(req, res) {
     db.get_stats(settings.coin.name, function (stats) {
       const currency = lib.get_market_currency_code();
 
-      eval('var p_ext = { "last_price_' + currency.toLowerCase() + '": new Decimal(stats.last_price.toString()).toFixed(), "last_price_usd": new Decimal(stats.last_usd_price.toString()).toFixed(), }');
+      const p_ext = {
+        [`last_price_${currency.toLowerCase()}`]: new Decimal(stats.last_price.toString()).toFixed(),
+        'last_price_usd': new Decimal(stats.last_usd_price.toString()).toFixed()
+      };
       res.send(p_ext);
     });
   } else
@@ -594,12 +584,23 @@ app.use('/ext/getbasicstats', function(req, res) {
       if (settings.api_page.public_apis.rpc.getmasternodecount.enabled == true && settings.api_cmds['getmasternodecount'] != null && settings.api_cmds['getmasternodecount'] != '') {
         // masternode count api is available
         lib.get_masternodecount(function(masternodestotal) {
-          eval('var p_ext = { "block_count": (stats.count ? stats.count : 0), "money_supply": new Decimal(stats.supply == null ? "0" : stats.supply.toString()).toFixed(), "last_price_' + currency.toLowerCase() + '": new Decimal(stats.last_price.toString()).toFixed(), "last_price_usd": new Decimal(stats.last_usd_price.toString()).toFixed(), "masternode_count": (masternodestotal == null ? 0 : masternodestotal.total) }');
+          const p_ext = {
+            'block_count': (stats.count ? stats.count : 0),
+            'money_supply': new Decimal(stats.supply == null ? '0' : stats.supply.toString()).toFixed(),
+            [`last_price_${currency.toLowerCase()}`]: new Decimal(stats.last_price.toString()).toFixed(),
+            'last_price_usd': new Decimal(stats.last_usd_price.toString()).toFixed(),
+            'masternode_count': (masternodestotal == null ? 0 : masternodestotal.total)
+          };
           res.send(p_ext);
         });
       } else {
         // masternode count api is not available
-        eval('var p_ext = { "block_count": (stats.count ? stats.count : 0), "money_supply": new Decimal(stats.supply == null ? "0" : stats.supply.toString()).toFixed(), "last_price_' + currency.toLowerCase() + '": new Decimal(stats.last_price.toString()).toFixed(), "last_price_usd": new Decimal(stats.last_usd_price.toString()).toFixed() }');
+        const p_ext = {
+          'block_count': (stats.count ? stats.count : 0),
+          'money_supply': new Decimal(stats.supply == null ? '0' : stats.supply.toString()).toFixed(),
+          [`last_price_${currency.toLowerCase()}`]: new Decimal(stats.last_price.toString()).toFixed(),
+          'last_price_usd': new Decimal(stats.last_usd_price.toString()).toFixed()
+        };
         res.send(p_ext);
       }
     });
@@ -685,7 +686,7 @@ app.use('/ext/getaddresstxs/:address/:start/:length', function(req, res) {
     db.get_address_txs_ajax(req.params.address, req.params.start, req.params.length, function(txs, count) {
       let data = [];
 
-      for (i = 0; i < txs.length; i++) {
+      for (let i = 0; i < txs.length; i++) {
         if (typeof txs[i].txid !== "undefined") {
           const balance = new Decimal(txs[i].balance.toString());
           let out = new Decimal('0');
@@ -896,7 +897,7 @@ app.use('/ext/getmasternodelist', function(req, res) {
     // get the masternode list from local collection
     db.get_masternodes(function(masternodes) {
       // loop through masternode list and remove the mongo _id and __v keys
-      for (i = 0; i < masternodes.length; i++) {
+      for (let i = 0; i < masternodes.length; i++) {
         delete masternodes[i]['_doc']['_id'];
         delete masternodes[i]['_doc']['__v'];
       }
@@ -915,7 +916,7 @@ app.use('/ext/getmasternoderewards/:hash/:since', function(req, res) {
     db.get_masternode_rewards(req.params.hash, req.params.since, function(rewards) {
       if (rewards != null) {
         // loop through the tx list to fix vout values and remove unnecessary data such as the always empty vin array and the mongo _id and __v keys
-        for (i = 0; i < rewards.length; i++) {
+        for (let i = 0; i < rewards.length; i++) {
           // remove unnecessary data keys
           delete rewards[i]['vin'];
           delete rewards[i]['_id'];
@@ -964,7 +965,7 @@ app.use('/ext/getorphanlist/:start/:length', function(req, res) {
     db.get_orphans(req.params.start, req.params.length, function(orphans, count) {
       var data = [];
 
-      for (i = 0; i < orphans.length; i++) {
+      for (let i = 0; i < orphans.length; i++) {
         var row = [];
 
         row.push(orphans[i].blockindex);
@@ -1016,8 +1017,13 @@ app.use('/ext/getnetworkchartdata', function(req, res) {
 });
 
 app.use('/system/restartexplorer', function(req, res, next) {
-  // check to ensure this special cmd is only executed by the local server
-  if (req._remoteAddress != null && req._remoteAddress.indexOf('127.0.0.1') > -1) {
+  // Check that the request originates from localhost (IPv4 or IPv6)
+  const clientIp = req.ip || req.socket.remoteAddress;
+  if (
+    clientIp === '127.0.0.1' ||
+    clientIp === '::1' ||
+    clientIp === '::ffff:127.0.0.1'
+  ) {
     // send a msg to the cluster process telling it to restart
     process.send('restart');
     res.end();
@@ -1043,7 +1049,14 @@ if (settings.markets_page.enabled == true) {
         // load market file
         var exMarket = require('./lib/markets/' + key);
         // save market_name and market_logo from market file to settings
-        eval('market_data.push({id: "' + key + '", name: "' + (exMarket.market_name == null ? '' : exMarket.market_name) + '", alt_name: "' + (exMarket.market_name_alt == null ? '' : exMarket.market_name_alt) + '", logo: "' + (exMarket.market_logo == null ? '' : exMarket.market_logo) + '", alt_logo: "' + (exMarket.market_logo_alt == null ? '' : exMarket.market_logo_alt) + '", trading_pairs: []});');
+        market_data.push({
+          id: key,
+          name: (exMarket.market_name == null ? '' : exMarket.market_name),
+          alt_name: (exMarket.market_name_alt == null ? '' : exMarket.market_name_alt),
+          logo: (exMarket.market_logo == null ? '' : exMarket.market_logo),
+          alt_logo: (exMarket.market_logo_alt == null ? '' : exMarket.market_logo_alt),
+          trading_pairs: []
+        });
         // loop through all trading pairs for this market
         for (var i = 0; i < settings.markets_page.exchanges[key].trading_pairs.length; i++) {
           var isAlt = false;

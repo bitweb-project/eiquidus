@@ -17,7 +17,7 @@ function check_webserver_running(cb) {
         // check if the port is open
         if (stdout != null && stdout != '') {
           // split the results in case there are multiple (usually because of ipv4 and ipv6)
-          split = stdout.split('\n');
+          const split = stdout.split('\n');
 
           // return the kill cmd
           return cb(`taskkill /f /pid ${split[0]}`);
@@ -30,8 +30,11 @@ function check_webserver_running(cb) {
       exec(`lsof -t -i:${settings.webserver.port}`, (err, stdout, stderr) => {
         // check if the port is open
         if (stdout != null && stdout != '') {
+          // lsof -t may return multiple PIDs (one per line, e.g. IPv4 + IPv6 listeners)
+          // join them space-separated so `kill -2 pid1 pid2` works correctly
+          const pids = stdout.trim().split(/\s+/).join(' ');
           // return the kill cmd
-          return cb(`kill -2 ${stdout.trim()}`);
+          return cb(`kill -2 ${pids}`);
         } else
           return cb(null);
       });

@@ -514,7 +514,7 @@ function get_orphaned_txids(block_hash, cb) {
       var txids = [];
 
       // populate an array of txids without the object data
-      for (t = 0; t < txes.length; t++)
+      for (let t = 0; t < txes.length; t++)
         txids.push(txes[t].txid);
 
       return cb(txids, null);
@@ -1400,20 +1400,62 @@ if (lib.is_locked([database]) == false) {
 
             // start an async loop to process the peer data
             async.timesSeries(body.length, function(i, loop) {
-              let address = body[i].addr;
+              const rawAddr = (body[i].addr || '').trim();
+              let address = rawAddr;
               let port = null;
 
-              // check if the port number is included in the peer address data
-              if (occurrences(address, ':') == 1 || occurrences(address, ']:') == 1) {
-                // separate the port # from the IP address
-                address = address.substring(0, address.lastIndexOf(':')).replace('[', '').replace(']', '');
-                port = body[i].addr.substring(body[i].addr.lastIndexOf(':') + 1);
+              // Parse address and port from the raw addr string.
+              // Supported formats:
+              //   IPv4 with port:  "1.2.3.4:26333"
+              //   IPv6 with port:  "[2001:db8::1]:26333"
+              //   IPv4 bare:       "1.2.3.4"           -> port stays null
+              //   IPv6 bare:       "2001:db8::1"        -> port stays null
+              const ipv4WithPort = rawAddr.match(/^([^:[\]]+):(\d+)$/);
+              const ipv6WithPort = rawAddr.match(/^\[([^\]]+)\]:(\d+)$/);
+              const ipv6Bare     = rawAddr.match(/^\[([^\]]+)\]$/);
+
+              if (ipv4WithPort) {
+                address = ipv4WithPort[1];
+                port    = ipv4WithPort[2];
+              } else if (ipv6WithPort) {
+                address = ipv6WithPort[1];
+                port    = ipv6WithPort[2];
+              } else if (ipv6Bare) {
+                address = ipv6Bare[1];
+              } else {
+                // bare IP / hostname without port — strip brackets just in case
+                address = rawAddr.replace(/^\[|\]$/g, '');
               }
 
-              // check if this an IPv6 address
-              if (address.indexOf(']') > -1) {
-                // remove [] characters from IPv6 addresses
-                address = address.replace('[', '').replace(']', '');
+              // skip loopback and private addresses - they cannot be geolocated and should not be stored as peers
+              const isLoopback = (address === '127.0.0.1' || address === '::1' || address.toLowerCase() === 'localhost');
+              const isPrivate = /^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)/.test(address);
+
+              if (isLoopback || isPrivate) {
+                console.log('Skip local/private peer %s [%s/%s]', body[i].addr, (i + 1).toString(), body.length.toString());
+
+                // check if the script is stopping
+                if (stopSync) {
+                  loop({});
+                } else {
+                  loop();
+                }
+
+                return;
+              }
+
+              // skip peers with no port — they cannot be reliably identified or stored
+              if (port === null || port === '') {
+                console.log('Skip peer without port %s [%s/%s]', body[i].addr, (i + 1).toString(), body.length.toString());
+
+                // check if the script is stopping
+                if (stopSync) {
+                  loop({});
+                } else {
+                  loop();
+                }
+
+                return;
               }
 
               // try to find this peer in the local database from the last peer sync
@@ -1454,7 +1496,7 @@ if (lib.is_locked([database]) == false) {
                     address: address,
                     port: port,
                     protocol: body[i].version,
-                    version: body[i].subver.replace('/', '').replace('/', ''),
+                    version: (body[i].subver || '').replace('/', '').replace('/', ''),
                     ipv6: (address && address.length > 15)
                   });
 

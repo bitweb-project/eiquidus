@@ -23,9 +23,9 @@ block content
     script.
       $(document).ready(function() {
         let xValues = ['Top 1-25', 'Top 26-50', 'Top 51-75', 'Top 76-100', '101+'];
-        let yValues = ['!{dista.total}', '!{distb.total}', '!{distc.total}', '!{distd.total}', '!{diste.total}'];
-        let totals = ['!{dista.totalFixed}', '!{distb.totalFixed}', '!{distc.totalFixed}', '!{distd.totalFixed}', '!{diste.totalFixed}'];
-        let percentages = ['!{dista.percentFixed}', '!{distb.percentFixed}', '!{distc.percentFixed}', '!{distd.percentFixed}', '!{diste.percentFixed}'];
+        let yValues = [!{JSON.stringify(dista.total)}, !{JSON.stringify(distb.total)}, !{JSON.stringify(distc.total)}, !{JSON.stringify(distd.total)}, !{JSON.stringify(diste.total)}];
+        let totals = [!{JSON.stringify(dista.totalFixed)}, !{JSON.stringify(distb.totalFixed)}, !{JSON.stringify(distc.totalFixed)}, !{JSON.stringify(distd.totalFixed)}, !{JSON.stringify(diste.totalFixed)}];
+        let percentages = [!{JSON.stringify(dista.percentFixed)}, !{JSON.stringify(distb.percentFixed)}, !{JSON.stringify(distc.percentFixed)}, !{JSON.stringify(distd.percentFixed)}, !{JSON.stringify(diste.percentFixed)}];
         const burned = !{JSON.stringify(burned)};
 
         if ('#{settings.richlist_page.burned_coins.include_burned_coins_in_distribution}' == 'true' && burned != null && burned != '' && burned.total != null && parseFloat(burned.total) > 0) {

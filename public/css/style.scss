@@ -31,60 +31,68 @@
 $theme-name: string.to-lower-case(theme-selector.$theme-name);
 
 @mixin table-border-color($important: 0) {
+  $color: null;
+
   @if $theme-name == "cerulean" {
-    border-color: cerulean.$gray-300 if($important == 0, null, !important);
+    $color: cerulean.$gray-300;
   } @else if $theme-name == "cosmo" {
-    border-color: cosmo.$gray-300 if($important == 0, null, !important);
+    $color: cosmo.$gray-300;
   } @else if $theme-name == "cyborg" {
-    border-color: cyborg.$gray-700 if($important == 0, null, !important);
+    $color: cyborg.$gray-700;
   } @else if $theme-name == "darkly" {
-    border-color: darkly.$gray-700 if($important == 0, null, !important);
+    $color: darkly.$gray-700;
   } @else if $theme-name == "exor" {
-    border-color: exor.$gray-700 if($important == 0, null, !important);
+    $color: exor.$gray-700;
   } @else if $theme-name == "flatly" {
-    border-color: flatly.$gray-200 if($important == 0, null, !important);
+    $color: flatly.$gray-200;
   } @else if $theme-name == "journal" {
-    border-color: journal.$gray-300 if($important == 0, null, !important);
+    $color: journal.$gray-300;
   } @else if $theme-name == "litera" {
-    border-color: litera.$gray-300 if($important == 0, null, !important);
+    $color: litera.$gray-300;
   } @else if $theme-name == "lumen" {
-    border-color: lumen.$gray-200 if($important == 0, null, !important);
+    $color: lumen.$gray-200;
   } @else if $theme-name == "lux" {
-    border-color: lux.$gray-300 if($important == 0, null, !important);
+    $color: lux.$gray-300;
   } @else if $theme-name == "materia" {
-    border-color: materia.$nav-tabs-border-color if($important == 0, null, !important);
+    $color: materia.$nav-tabs-border-color;
   } @else if $theme-name == "minty" {
-    border-color: minty.$gray-300 if($important == 0, null, !important);
+    $color: minty.$gray-300;
   } @else if $theme-name == "morph" {
-    border-color: morph.$gray-300 if($important == 0, null, !important);
+    $color: morph.$gray-300;
   } @else if $theme-name == "pulse" {
-    border-color: pulse.$gray-300 if($important == 0, null, !important);
+    $color: pulse.$gray-300;
   } @else if $theme-name == "quartz" {
-    border-color: quartz.$gray-300 if($important == 0, null, !important);
+    $color: quartz.$gray-300;
   } @else if $theme-name == "sandstone" {
-    border-color: sandstone.$gray-300 if($important == 0, null, !important);
+    $color: sandstone.$gray-300;
   } @else if $theme-name == "simplex" {
-    border-color: #eeeeee if($important == 0, null, !important);  /* Hardcoded value not present in _variables.scss */
+    $color: #eeeeee;
   } @else if $theme-name == "sketchy" {
-    border-color: sketchy.$gray-800 if($important == 0, null, !important);
+    $color: sketchy.$gray-800;
   } @else if $theme-name == "slate" {
-    border-color: rgba(0, 0, 0, 0.6) if($important == 0, null, !important);  /* Hardcoded value not present in _variables.scss */
+    $color: rgba(0, 0, 0, 0.6);
   } @else if $theme-name == "solar" {
-    border-color: solar.$gray-800 if($important == 0, null, !important);
+    $color: solar.$gray-800;
   } @else if $theme-name == "spacelab" {
-    border-color: spacelab.$gray-300 if($important == 0, null, !important);
+    $color: spacelab.$gray-300;
   } @else if $theme-name == "superhero" {
-    border-color: superhero.$gray-200 if($important == 0, null, !important);
+    $color: superhero.$gray-200;
   } @else if $theme-name == "united" {
-    border-color: united.$gray-300 if($important == 0, null, !important);
+    $color: united.$gray-300;
   } @else if $theme-name == "vapor" {
-    border-color: vapor.$gray-300 if($important == 0, null, !important);
+    $color: vapor.$gray-300;
   } @else if $theme-name == "yeti" {
-    border-color: rgba(0, 0, 0, 0.1) if($important == 0, null, !important);  /* Hardcoded value not present in _variables.scss */
+    $color: rgba(0, 0, 0, 0.1);
   } @else if $theme-name == "zephyr" {
-    border-color: zephyr.$gray-300 if($important == 0, null, !important);    
+    $color: zephyr.$gray-300;
   } @else {
-    border-color: #000000 if($important == 0, null, !important);
+    $color: #000000;
+  }
+
+  @if $important != 0 {
+    border-color: $color !important;
+  } @else {
+    border-color: $color;
   }
 }
 

@@ -89,7 +89,9 @@ block content
             img#header-img(src=(settings.shared_pages.page_header.page_title_image == null || settings.shared_pages.page_header.page_title_image.image_path == null || settings.shared_pages.page_header.page_title_image.image_path == '' ? '/img/page-title-img.png' : settings.shared_pages.page_header.page_title_image.image_path))
         #page-title-container
           if settings.markets_page.page_header.show_title == true
-            h3#page-title !{settings.localization.mkt_title.replace('{1}', marketdata.market_name + ' <span class="small fw-normal">(' + marketdata.coin + '/' + marketdata.exchange + ')</span>')}
+            h3#page-title
+              | #{settings.localization.mkt_title.replace('{1}', marketdata.market_name)}
+              span.small.fw-normal  (#{marketdata.coin}/#{marketdata.exchange})
           if settings.markets_page.page_header.show_last_updated == true
             if settings.markets_page.page_header.show_title != true && settings.markets_page.page_header.show_description != true && (settings.markets_page.page_header.show_exchange_url != true && marketdata.url != null && marketdata.url != '')
               #page-title-container
@@ -106,12 +108,14 @@ block content
                 .sub-page-header
                   span.fw-bold='Link to Exchange:'
                   a.sub-page-header(title='Link to Exchange', target='_blank', href=marketdata.url)
-                    span !{' Trade <span class="small fw-normal">(' + marketdata.coin + '/' + marketdata.exchange + ')</span>'}              
+                    span Trade
+                      span.small.fw-normal  (#{marketdata.coin}/#{marketdata.exchange})              
             else
               .sub-page-header(style='margin-bottom:' + (settings.markets_page.page_header.show_description == true ? '5' : '0') + 'px')
                 span.fw-bold='Link to Exchange:'
                 a.sub-page-header(title='Link to Exchange', target='_blank', href=marketdata.url)
-                  span !{' Trade <span class="small fw-normal">(' + marketdata.coin + '/' + marketdata.exchange + ')</span>'}
+                  span Trade
+                    span.small.fw-normal  (#{marketdata.coin}/#{marketdata.exchange})
           if settings.markets_page.page_header.show_description == true
             if settings.markets_page.page_header.show_title != true && settings.markets_page.page_header.show_last_updated != true && (settings.markets_page.page_header.show_exchange_url != true && marketdata.url != null && marketdata.url != '')
               #page-title-container
@@ -168,9 +172,11 @@ block content
       block market_view
         script.
           $(document).ready(function() {
-            let chartData = !{(marketdata.data.chartdata == null || marketdata.data.chartdata == 'null' || marketdata.data.chartdata == '' || marketdata.data.chartdata == '[]' ? 'null' : marketdata.data.chartdata)};
+            let chartData = !{JSON.stringify(marketdata.data.chartdata != null && marketdata.data.chartdata !== 'null' && marketdata.data.chartdata !== '' && marketdata.data.chartdata !== '[]' && marketdata.data.chartdata.length > 0 ? marketdata.data.chartdata : null)};
 
-            if (chartData != null) {
+            var chartCanvas = document.getElementById('chart');
+            if (chartCanvas != null && chartData != null && chartData.length > 0) {
+              try {
               chartData = chartData.map(function(item) {
                 return {
                   x: item[0],
@@ -276,6 +282,7 @@ block content
                   }
                 }
               });
+              } catch(e) { /* chart init failed silently */ }
             }
           });
         .row
@@ -287,7 +294,7 @@ block content
                 strong #{marketdata.market_name}
                 span.small.fw-normal  (#{marketdata.coin}/#{marketdata.exchange})
                 strong  - #{settings.localization.mkt_hours}
-                if marketdata.data.chartdata == null || marketdata.data.chartdata == 'null' || marketdata.data.chartdata == '' || marketdata.data.chartdata == '[]'
+                if marketdata.data.chartdata == null || marketdata.data.chartdata == 'null' || marketdata.data.chartdata == '' || marketdata.data.chartdata == '[]' || marketdata.data.chartdata.length == 0
                   span.fa-solid.fa-chart-line.float-end.view-chart-disabled.market-toggle(style='cursor: pointer;color: var(--bs-body-color);', data-bs-toggle='tooltip', data-bs-placement='bottom', title=settings.localization.mkt_no_chart)
               table#market-summary.table.table-bordered.bottom-border-0.summary-table.single-row-table(style='border-top:0;margin-top:0 !important;')
                 thead
@@ -384,7 +391,7 @@ block content
                       td.text-center -
                       td.text-center -
                       td.text-center -
-        if marketdata.data.chartdata != null && marketdata.data.chartdata != 'null' && marketdata.data.chartdata != '' && marketdata.data.chartdata != '[]'
+        if marketdata.data.chartdata != null && marketdata.data.chartdata != 'null' && marketdata.data.chartdata != '' && marketdata.data.chartdata != '[]' && marketdata.data.chartdata.length > 0
           #marketChart.row
             .col-md-12.cardSpacer
               .card.card-default.border-0

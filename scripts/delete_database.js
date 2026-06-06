@@ -234,7 +234,8 @@ if (lib.is_locked([deleteLockName]) == false) {
         }
       });
     }).catch((err) => {
-      console.log('Error: Unable to connect to database: %s', err);
+      // NOTE: do not log the full connection string as it contains credentials
+      console.log('Error: Unable to connect to database at %s:%s', settings.dbsettings.address, settings.dbsettings.port);
       exit(mongoose, 999);
     });
   } else {

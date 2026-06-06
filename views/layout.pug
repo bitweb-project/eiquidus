@@ -15,18 +15,28 @@ html(lang='en')
     if settings.shared_pages.favicons.favicon192 != ''
       link(rel='icon', href='/' + settings.shared_pages.favicons.favicon192, sizes='192x192')
     link(rel='stylesheet', href='/css/themes/' + settings.shared_pages.theme.toLowerCase() + '/bootstrap.min.css' + (themeHash == null ? '' : '?h=' + themeHash))
-    link(rel='stylesheet', href='https://use.fontawesome.com/releases/v6.4.2/css/all.css')
+    //- https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css
+    link(rel='stylesheet', href='/css/all.min.css', integrity='sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==', crossorigin='anonymous')
     if active == 'network'
-      link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.11.1/css/flag-icons.min.css')
-    link(rel='stylesheet', type='text/css', href='https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css')
-    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.3.2/styles/overlayscrollbars.min.css')
+      //- https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.2.3/css/flag-icons.min.css
+      link(rel='stylesheet', href='/css/flag-icons.min.css', integrity='sha512-bZBu2H0+FGFz/stDN/L0k8J0G8qVsAL0ht1qg5kTwtAheiXwiRKyCq1frwfbSFSJN3jooR5kauE0YjtPzhZtJQ==', crossorigin='anonymous')
+      //- https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css
+    link(rel='stylesheet', type='text/css', href='/css/dataTables.bootstrap5.min.css', integrity='sha512-b6Ai4YnSM5LpNjNBvhPUrVQ2IgHCYKYnUgXPpAFmd9/zSx35YBnOKUEA3HRRMqm8dOFMVWQclQPRmEl9zD+DQw==', crossorigin='anonymous')
+    //- https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.10.1/styles/overlayscrollbars.min.css
+    link(rel='stylesheet', href='/css/overlayscrollbars.min.css', integrity='sha512-1upUL7mU0vRAdxf0hllx44X8k95N0hSFoljRxrCYLvqn7Ih2lGbzgrNTDpXUPnHo/m6lB7JZzteEy7IXHuJ/cw==', crossorigin='anonymous')
     link(rel='stylesheet', href='/css/style.min.css' + (styleHash == null ? '' : '?h=' + styleHash))
     link(rel='stylesheet', href='/css/custom.min.css' + (customHash == null ? '' : '?h=' + customHash))
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js', integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==', crossorigin='anonymous', referrerpolicy='no-referrer')
-    script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p', crossorigin='anonymous')
-    script(type='text/javascript', src='/js/custom.js')
-    script(type='text/javascript', src='https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js')
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.3.2/browser/overlayscrollbars.browser.es6.min.js', integrity="sha512-jh4tHrf3Zaee6k2wOl1kVm4Gm5uIFbOQkUPfA419yLxADm1Q9jtihcGAJUl9ThBR8yc4/VYCOQCY/K87g14kSw==", crossorigin="anonymous", referrerpolicy="no-referrer")
+    //- https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js
+    script(type='text/javascript', src='/js/jquery.min.js', integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==', crossorigin='anonymous')
+    //- https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js
+    script(type='text/javascript', src='/js/bootstrap.bundle.min.js', integrity='sha512-HvOjJrdwNpDbkGJIG2ZNqDlVqMo77qbs4Me4cah0HoDrfhrbA+8SBlZn1KrvAQw7cILLPFJvdwIgphzQmMm+Pw==', crossorigin='anonymous')
+    //- https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js
+    script(type='text/javascript', src='/js/jquery.dataTables.min.js', integrity='sha512-BQ3f0AMbTpWxc4YSQm03nL5LX7mb4KhgNQfEowc6IdpylTaRuzkiChTJISQlKWaof0rIYtHRaRBEl8G6F8GxzA==', crossorigin='anonymous')
+    //- https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js
+    script(type='text/javascript', src='/js/dataTables.bootstrap5.min.js', integrity='sha512-zw34c1fnMeY29qzodeC+GGKfyQQ7hN+a9yjGnIAZbkPPn/Xeh8Z46uea/fjq5Mwsp4bxvGKfJrTNnh/GdIZJ1g==', crossorigin='anonymous')
+    //- https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.10.1/browser/overlayscrollbars.browser.es6.min.js
+    script(type='text/javascript', src='/js/overlayscrollbars.browser.es6.min.js', integrity='sha512-bDTkSDb0/IRzL9tINJGwc2iQwmqVF3X9y7Doo7ZWvtfUM0y8Wuw1yqbYSPCBfVUBun64XIyPfXStDf9vc7cR8Q==', crossorigin='anonymous')
+    script(type='text/javascript', src='/js/custom.js') 
     - var showPanels = false
     - var showNethashChart = false
     - var showDifficultyChart = false
@@ -168,14 +178,19 @@ html(lang='en')
     if active == 'home' || active == 'address' || active == 'block' || active == 'markets' || active == 'masternodes' || active == 'movement' || active == 'network' || active == 'orphans' || active == 'reward' || active == 'richlist' || active == 'tx'
       include ./includes/common.pug
     if active == 'markets' || active == 'richlist' || active == 'reward' || showNethashChart == true || showDifficultyChart == true
-      script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js')
+      //- https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js
+      script(type='text/javascript', src='/js/chart.umd.min.js', integrity='sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==')
     if active == 'markets'
-      script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js')
+      //- https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js
+      script(type='text/javascript', src='/js/chartjs-chart-financial.min.js', integrity='sha512-Ibogzrxtf8eGSvoVawY26L8Hr0cpct7whyaei0R9/DBN/ZwlLbI3+rDYbBwu2u1FRQQQNy3s9Y0wLdlXaFwApQ==', crossorigin='anonymous')
     if active == 'markets' || showNethashChart == true || showDifficultyChart == true
-      script(type='text/javascript', src='https://cdn.jsdelivr.net/gh/joeuhren/chartjs-plugin-crosshair@v2.0.5/build/chartjs-plugin-crosshair.min.js')
-      script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1')
+      //- https://cdn.jsdelivr.net/gh/joeuhren/chartjs-plugin-crosshair@v2.0.5/build/chartjs-plugin-crosshair.min.js
+      script(type='text/javascript', src='/js/chartjs-plugin-crosshair.min.js', integrity='sha512-MltHhXoBRRdo0RZbFLpbCs8FBk2+6q92KZcakGUYhzLdwqrRc6z6apxyaF/jjJcVBSgt0j1u/eN+iWmp45Da0Q==', crossorigin='anonymous')
+      //- https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js
+      script(type='text/javascript', src='/js/chartjs-adapter-luxon.umd.min.js', integrity='sha512-I8SeDoNxRKOuQMhqHmx95hydiG/LCY9SFCs3cqAf+f1kIZbAyXXIXIIwgx32ZIgZpOVrEOHSfyjeKxRNIuBvWQ==', crossorigin='anonymous')
     if showNethashChart == true || showDifficultyChart == true
-      script(type='text/javascript', src='https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js')
+      //- https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js
+      script(type='text/javascript', src='/js/chartjs-plugin-annotation.min.js', integrity='sha512-8MntMizyPIYkcjoDkYqgrQOuWOZsp92zlZ9d7M2RCG0s1Zua8H215p2PdsxS7qg/4hLrHrdPsZgVZpXheHYT+Q==', crossorigin='anonymous')
     - var sideBarClasses = [];
     if settings.shared_pages.page_header.bgcolor != null && settings.shared_pages.page_header.bgcolor != ''
       - sideBarClasses.push('bg-' + settings.shared_pages.page_header.bgcolor);

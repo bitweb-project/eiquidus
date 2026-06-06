@@ -50,7 +50,8 @@ function verify_collection_exists(cb) {
         return cb(true);
       });
     }).catch((err) => {
-      console.log('Error: Unable to connect to database: %s', err);
+      // NOTE: do not log the full connection string as it contains credentials
+      console.log('Error: Unable to connect to database at %s:%s', settings.dbsettings.address, settings.dbsettings.port);
       exit(999);
       return cb(true);
     });
@@ -62,6 +63,11 @@ function verify_collection_exists(cb) {
 if (process.argv[2] != null && process.argv[2] != '') {
   // use the backup filename passed into this script
   backupFilename = process.argv[2];
+
+  // SECURITY: if the path is not absolute, strip any directory components to prevent
+  // path traversal attacks (e.g. argv "../../etc/cron.d/evil" -> "evil")
+  if (!path.isAbsolute(backupFilename))
+    backupFilename = path.basename(backupFilename);
 } else {
   const systemDate = new Date();
   const monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -72,8 +78,14 @@ if (process.argv[2] != null && process.argv[2] != '') {
 
 // check if a collection name was passed into the script
 if (process.argv[3] != null && process.argv[3] != '') {
-  // save the collection name to a variable for later use
-  singleCollection = process.argv[3];
+  // SECURITY: validate collection name — only allow alphanumeric, underscore, hyphen and dot
+  // to prevent shell command injection via the --collection flag in mongodump
+  if (/^[a-zA-Z0-9_\-\.]+$/.test(process.argv[3])) {
+    singleCollection = process.argv[3];
+  } else {
+    console.log('Error: Invalid collection name. Only alphanumeric characters, underscores, hyphens and dots are allowed.');
+    process.exit(1);
+  }
 }
 
 // check if backup filename has the archive suffix already
@@ -118,7 +130,10 @@ if (!fs.existsSync(path.join(backupPath, `${backupFilename}${archiveSuffix}`))) 
           const { exec } = require('child_process');
 
           // execute backup
-          const backupProcess = exec(`mongodump --host="${settings.dbsettings.address}" --port="${settings.dbsettings.port}" --username="${settings.dbsettings.user}" --password="${settings.dbsettings.password}" --db="${settings.dbsettings.database}" --archive="${path.join(backupPath, backupFilename + archiveSuffix)}" --gzip${singleCollection == null || singleCollection == '' ? '' : ` --collection ${singleCollection}`}`);
+          // SECURITY NOTE: mongodump does not support reading credentials from env vars or config files.
+          // The password appears in the process argument list. Mitigate by restricting OS-level access
+          // to the server and ensuring only trusted users can view running processes (e.g. via ps).
+          const backupProcess = exec(`mongodump --host="${settings.dbsettings.address}" --port="${settings.dbsettings.port}" --username="${settings.dbsettings.user}" --password="${settings.dbsettings.password}" --db="${settings.dbsettings.database}" --archive="${path.join(backupPath, backupFilename + archiveSuffix)}" --gzip${singleCollection == null || singleCollection == '' ? '' : ` --collection "${singleCollection}"`}`);
 
           backupProcess.stdout.on('data', (data) => {
             console.log(data);

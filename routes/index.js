@@ -31,13 +31,16 @@ function finalize_send_block_data(res, block, txs, title_text, orphan, extracted
     block.size = lib.format_decimal_string(new Decimal(block.size.toString()).div('1024'), { minFractionDigits: 2, maxFractionDigits: 2 });
   }
 
-  txs.forEach(function (tx) {
-    // add a fixed value for display
-    if (tx.vout.length > 0)
-      tx['totalFixed'] = lib.format_decimal_string(new Decimal(tx.total.toString()).div(100000000), { minFractionDigits: 2, maxFractionDigits: 8 });
-    else
-      tx['totalFixed'] = lib.format_decimal_string(new Decimal(tx.total.toString()), { minFractionDigits: 2, maxFractionDigits: 8 });
-  });
+  // Protect against null txs – genesis block passes null intentionally
+  if (txs) {
+    txs.forEach(function (tx) {
+      // add a fixed value for display
+      if (tx.vout.length > 0)
+        tx['totalFixed'] = lib.format_decimal_string(new Decimal(tx.total.toString()).div(100000000), { minFractionDigits: 2, maxFractionDigits: 8 });
+      else
+        tx['totalFixed'] = lib.format_decimal_string(new Decimal(tx.total.toString()), { minFractionDigits: 2, maxFractionDigits: 8 });
+    });
+  }
 
   res.render(
     'block',
@@ -46,7 +49,7 @@ function finalize_send_block_data(res, block, txs, title_text, orphan, extracted
       block: block,
       orphan: orphan,
       confirmations: settings.shared_pages.confirmations,
-      txs: txs,
+      txs: txs || [],   // ensures template receives an array
       extracted_by_addresses: extracted_by_addresses,
       showSync: db.check_show_sync_message(),
       customHash: get_custom_hash(),
@@ -177,7 +180,7 @@ function get_last_updated_date(show_last_updated, last_updated_field, cb) {
 }
 
 function get_block_data_from_wallet(block, res, orphan) {
-  var ntxs = [];
+  const ntxs = [];
 
   async.eachSeries(block.tx, function(block_tx, loop) {
     lib.get_rawtransaction(block_tx, function(tx) {
@@ -278,7 +281,7 @@ function route_get_tx(res, txid) {
                 if (!rtx.confirmations > 0) {
                   lib.get_block(rtx.blockhash, function(block) {
                     if (block && block != `${settings.localization.ex_error}: ${settings.localization.check_console}`) {
-                      var utx = {
+                      const utx = {
                         txid: rtx.txid,
                         vin: rvin,
                         vout: rvout,
@@ -306,7 +309,7 @@ function route_get_tx(res, txid) {
                     lib.get_block(rtx.blockhash, function(block) {
                       if (block && block != `${settings.localization.ex_error}: ${settings.localization.check_console}`) {
                         // create the tx object before rendering
-                        var utx = {
+                        const utx = {
                           txid: rtx.txid,
                           vin: rvin,
                           vout: rvout,
@@ -331,7 +334,7 @@ function route_get_tx(res, txid) {
                     });
                   } else {
                     // create the tx object before rendering
-                    var utx = {
+                    const utx = {
                       txid: rtx.txid,
                       vin: rvin,
                       vout: rvout,
@@ -484,6 +487,13 @@ router.get('/markets/:market/:coin_symbol/:pair_symbol', function(req, res) {
       // lookup market data
       db.get_market(market_id, coin_symbol, pair_symbol, function(data) {
         // load market data
+        // SECURITY: market_id is validated against settings.exchanges above, but add
+        // explicit alphanumeric check as defense-in-depth against path traversal
+        if (!/^[a-zA-Z0-9_\-]+$/.test(market_id)) {
+          route_get_txlist(res, null);
+          return;
+        }
+
         const market_data = require('../lib/markets/' + market_id);
         let isAlt = false;
         let url = '';
@@ -828,7 +838,7 @@ router.get('/reward', function(req, res) {
         if (!heavy)
           heavy = { coin: settings.coin.name, lvote: 0, reward: 0, supply: 0, cap: 0, estnext: 0, phase: 'N/A', maxvote: 0, nextin: 'N/A', votes: [] };
 
-        var votes = heavy.votes;
+        const votes = heavy.votes;
 
         votes.sort(function (a, b) {
           if (a.count < b.count)
@@ -914,7 +924,7 @@ router.get('/orphans', function(req, res) {
 
 router.post('/search', function(req, res) {
   if (settings.shared_pages.page_header.search.enabled == true) {
-    var query = req.body.search.trim();
+    const query = req.body.search.trim();
 
     if (query.length == 64) {
       if (query == settings.transaction_page.genesis_tx)
@@ -966,7 +976,7 @@ router.get('/qr/:string', function(req, res) {
   if (req.params.string) {
     const qr = require('qr-image');
 
-    var address = qr.image(req.params.string, {
+    const qrImage = qr.image(req.params.string, {
       type: 'png',
       size: 4,
       margin: 1,
@@ -974,7 +984,7 @@ router.get('/qr/:string', function(req, res) {
     });
 
     res.type('png');
-    address.pipe(res);
+    qrImage.pipe(res);
   }
 });
 

@@ -170,17 +170,14 @@ if (reloadWebserver == true) {
         exit();
       });
     } else {
-      const request = require('postman-request');
+      // try executing the restart explorer api using native fetch with a 1 second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1000);
 
-      // try executing the restart explorer api
-      request({uri: `http://localhost:${settings.webserver.port}/system/restartexplorer`, timeout: 1000}, function (error, response, summary) {
-        // check if there was an error
-        if (error != null) {
-          console.log('Webserver is not runnning\n');
+      fetch(`http://localhost:${settings.webserver.port}/system/restartexplorer`, { signal: controller.signal })
+        .then(function() {
+          clearTimeout(timeoutId);
 
-          // finish the script
-          exit();
-        } else {
           // compile css and initialize database
           init_database(function() {
             console.log(`\n${settings.localization.reloading_explorer}.. ${settings.localization.please_wait}..\n`);
@@ -188,8 +185,14 @@ if (reloadWebserver == true) {
             // finish the script
             exit();
           });
-        }
-      });
+        })
+        .catch(function() {
+          clearTimeout(timeoutId);
+          console.log('Webserver is not runnning\n');
+
+          // finish the script
+          exit();
+        });
     }
   }
 } else {

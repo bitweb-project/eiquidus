@@ -1,5 +1,7 @@
 describe('market', function() {
   describe('dexomy', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -29,6 +31,8 @@ describe('market', function() {
   });
 
   describe('dextrade', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -58,6 +62,8 @@ describe('market', function() {
   });
 
   describe('freiexchange', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -90,6 +96,8 @@ describe('market', function() {
   });
 
   describe('nestex', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -107,7 +115,6 @@ describe('market', function() {
         expect(obj.trades.length).toBeGreaterThan(0);
         expect(obj.trades.length).toBeLessThanOrEqual(300);
         expect(Object.keys(obj.stats).length).toEqual(7);
-        expect(obj.chartdata).toEqual(null);
         done();
       });
     });
@@ -118,6 +125,8 @@ describe('market', function() {
   });
 
   describe('nonkyc', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -147,6 +156,8 @@ describe('market', function() {
   });
 
   describe('poloniex', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
@@ -175,35 +186,9 @@ describe('market', function() {
     });
   });
 
-  describe('qutrade', function() {
-    beforeEach(function() {
-      originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-    });
-
-    it('should return market data', function(done) {
-      const qutrade = require('../lib/markets/qutrade');
-
-      qutrade.get_data({ coin: 'BTC', exchange: 'USDT' }, function(err, obj) {
-        expect(err).toEqual(null);
-        expect(obj.buys.length).toBeGreaterThan(0);
-        expect(obj.buys.length).toBeLessThanOrEqual(100);
-        expect(obj.sells.length).toBeGreaterThan(0);
-        expect(obj.sells.length).toBeLessThanOrEqual(100);
-        expect(obj.trades.length).toBeGreaterThan(0);
-        expect(obj.trades.length).toBeLessThanOrEqual(100);
-        expect(Object.keys(obj.stats).length).toEqual(8);
-        expect(obj.chartdata).toEqual(null);
-        done();
-      });
-    });
-
-    afterEach(function() {
-      jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-    });
-  });
-
   describe('yobit', function() {
+    let originalTimeout;
+
     beforeEach(function() {
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;

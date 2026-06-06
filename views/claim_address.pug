@@ -66,9 +66,11 @@ block content
             }
           }
         });
-        if ('!{hash}' != 'null' && '!{hash}' != '') {
+        var __hash = !{JSON.stringify(hash != null ? String(hash) : '')};
+        var __claimName = !{JSON.stringify(claim_name != null ? String(claim_name) : '')};
+        if (__hash !== 'null' && __hash !== '') {
           $('<div id="claimAlert"></div>').insertBefore('#claimForm');
-          $('#claimAlert').html(generateAlertHTML('info', true, ('!{claim_name}' == '' ? 'Unc' : 'C') + 'laimed address', '<strong>!{hash}</strong> is currently ' + ('!{claim_name}' == '' ? 'un' : '') + 'claimed' + ('!{claim_name}' == '' ? '' : ' as <strong>' + displayAsText('!{claim_name}') + '.</strong>')));
+          $('#claimAlert').html(generateAlertHTML('info', true, (__claimName === '' ? 'Unc' : 'C') + 'laimed address', '<strong>' + displayAsText(__hash) + '</strong> is currently ' + (__claimName === '' ? 'un' : '') + 'claimed' + (__claimName === '' ? '' : ' as <strong>' + displayAsText(__claimName) + '.</strong>')));
         }
         if (#{settings.shared_pages.page_header.page_title_image.enable_animation} == true && #{settings.claim_address_page.page_header.show_img} == true)
           startRotateElement('img#header-img');
