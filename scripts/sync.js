@@ -518,11 +518,12 @@ function get_orphaned_txids(block_hash, cb) {
       return cb(txids, null);
     } else {
       // no txes found
-      return cb(null, null);
+      return cb([], null);
     }
   }).catch((err) => {
     // an error was returned
-    return cb(null, err);
+    console.log(err);
+    return cb([], null);
   });
 }
 
@@ -1294,7 +1295,7 @@ if (lib.is_locked([database]) == false) {
                   console.log(`${settings.localization.calculating_tx_count}.. ${settings.localization.please_wait}..`);
 
                   // resetting the transaction counter requires a single lookup on the txes collection to find all txes that have a positive or zero total and 1 or more vout
-                  Tx.find({'total': {$gte: 0}, 'vout': { $gte: { $size: 1 }}}).countDocuments().then((count) => {
+                  Tx.find({'total': {$gte: 0}, 'vout.0': { $exists: true }}).countDocuments().then((count) => {
                     console.log('Found tx count: ' + count.toString());
 
                     Stats.updateOne({coin: settings.coin.name}, {
