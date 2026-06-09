@@ -620,7 +620,7 @@ html(lang='en')
           let highestPowDifficulty = 0;
           let highestPowDifficultyFixed = '-';
           let lowestPowDifficulty = -1;
-          let lowestPowDifficultyFixed = '-;'
+          let lowestPowDifficultyFixed = '-';
           let highestPosDifficulty = 0;
           let highestPosDifficultyFixed = '-';
           let lowestPosDifficulty = -1;
@@ -1068,7 +1068,7 @@ html(lang='en')
             difficultyChart.update('none');
           }
         }
-    if (showPanels == true && showNetworkPanel == true) || showNethashChart == true || showDifficultyChart == true
+    if ((showPanels == true && showNetworkPanel == true) || showNethashChart == true || showDifficultyChart == true)
       script.
         function getNetHashUnits() {
           let networkSuffix = '';

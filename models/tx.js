@@ -15,6 +15,7 @@ const TxSchema = new Schema({
   algo: { type: String, default: null }
 }, {id: false});
 
-TxSchema.index({total: 1, total: -1, blockindex: 1, blockindex: -1});
+TxSchema.index({total: 1, blockindex: 1});
+TxSchema.index({total: -1, blockindex: -1});
 
 module.exports = mongoose.model('Tx', TxSchema);

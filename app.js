@@ -11,7 +11,7 @@ var express = require('express'),
     package_metadata = require('./package.json');
 var app = express();
 var apiAccessList = [];
-var viewPaths = [path.join(__dirname, 'views')]
+var viewPaths = [path.join(__dirname, 'views')];
 var pluginRoutes = [];
 const { exec } = require('child_process');
 const Decimal = require('decimal.js');
@@ -491,7 +491,7 @@ app.use('/ext/gettx/:txid', function(req, res) {
               lib.prepare_vout(rtx.vout, rtx.txid, vin, ((typeof rtx.vjoinsplit === 'undefined' || rtx.vjoinsplit == null) ? [] : rtx.vjoinsplit), function(rvout, rvin, tx_type_vout) {
                 const total = lib.calculate_total(rvout);
 
-                if (!rtx.confirmations > 0) {
+                if (!(rtx.confirmations > 0)) {
                   var utx = {
                     txid: rtx.txid,
                     vin: rvin,
@@ -705,7 +705,7 @@ app.use('/ext/getaddresstxs/:address/:start/:length', function(req, res) {
           if (internal) {
             let row = [];
             let updown = '';
-            let amount = new Decimal('0');
+            let amount;
             let amountString = '';
             let rowclass = 'table-info';
 

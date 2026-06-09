@@ -5,7 +5,7 @@ const blkSync = require('../lib/block_sync');
 const settings = require('../lib/settings');
 const resumeSync = process.argv[2] == '1';
 
-let dbString = `mongodb://${settings.benchmark.address}:${settings.benchmark.port}/admin`
+let dbString = `mongodb://${settings.benchmark.address}:${settings.benchmark.port}/admin`;
 
 // prevent stopping of the sync script to be able to gracefully shut down
 process.on('SIGINT', () => {
