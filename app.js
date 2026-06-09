@@ -263,7 +263,7 @@ function validate_captcha(captcha_enabled, data, cb) {
     return cb(true);
   }
 
-  if (!secret) {
+  if (!service || !secret) {
     return cb(true); // configuration missing
   }
 
