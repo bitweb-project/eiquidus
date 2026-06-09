@@ -13,7 +13,7 @@ function send_block_data(res, block, txs, title_text, orphan) {
   // check if the extracted by addresses should be found
   if (settings.block_page.show_extracted_by == true && txs != null && txs.length > 0) {
     // find the block reward tx
-    const block_reward_tx = txs.find(tx => tx.vin != null && (tx.vin.length === 0 || (tx.vin.length === 1 && tx.vin[0].addresses === 'coinbase' && tx.vin[0].amount != 0)));
+    const block_reward_tx = txs.find(tx => tx.vin != null && (tx.vin.length === 0 || (tx.vin.length === 1 && tx.vin[0].addresses === 'coinbase' && tx.vin[0].amount !== 0)));
 
     // get a list of all the block reward addresses
     extracted_by_addresses = (block_reward_tx ? block_reward_tx.vout.map(v => v.addresses) : []);
@@ -75,7 +75,7 @@ function send_tx_data(res, tx, blockcount, orphan) {
       (
         tx.vin.length === 1 &&
         tx.vin[0].addresses === 'coinbase' &&
-        tx.vin[0].amount != 0
+        tx.vin[0].amount !== 0
       )
     )
   ) {
@@ -91,15 +91,21 @@ function send_tx_data(res, tx, blockcount, orphan) {
 }
 
 function finalize_send_tx_data(res, tx, blockcount, orphan, extracted_by_addresses) {
-  tx.vin.forEach(function (vin) {
+  const vinList = Array.isArray(tx.vin) ? tx.vin : [];
+  const voutList = Array.isArray(tx.vout) ? tx.vout : [];
+
+  vinList.forEach(function (vin) {
     // add a fixed value for display
     vin['amountFixed'] = lib.format_decimal_string(new Decimal(vin.amount.toString()).div(100000000), { minFractionDigits: 2, maxFractionDigits: 8 });
   });
 
-  tx.vout.forEach(function (vout) {
+  voutList.forEach(function (vout) {
     // add a fixed value for display
     vout['amountFixed'] = lib.format_decimal_string(new Decimal(vout.amount.toString()).div(100000000), { minFractionDigits: 2, maxFractionDigits: 8 });
   });
+
+  tx.vin = vinList;
+  tx.vout = voutList;
 
   res.render(
     'tx',
@@ -139,7 +145,7 @@ function send_address_data(res, address, claim_name) {
       customHash: get_custom_hash(),
       styleHash: get_style_hash(),
       themeHash: get_theme_hash(),
-      page_title_prefix: settings.coin.name + ' ' + 'Address ' + (claim_name == null || claim_name == '' ? address.a_id : claim_name)
+      page_title_prefix: settings.coin.name + ' ' + 'Address ' + (claim_name === null || claim_name === undefined || claim_name === '' ? address.a_id : claim_name)
     }
   );
 }
@@ -155,7 +161,7 @@ function send_claimaddress_data(res, hash, claim_name) {
       customHash: get_custom_hash(),
       styleHash: get_style_hash(),
       themeHash: get_theme_hash(),
-      page_title_prefix: settings.coin.name + ' Claim Wallet Address' + (hash == null || hash == '' ? '' : ' ' + hash)
+      page_title_prefix: settings.coin.name + ' Claim Wallet Address' + (hash === null || hash === undefined || hash === '' ? '' : ' ' + hash)
     }
   );
 }
