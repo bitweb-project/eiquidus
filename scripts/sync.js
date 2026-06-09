@@ -1444,7 +1444,7 @@ if (lib.is_locked([database]) == false) {
                   });
 
                   // check if any peers should be saved
-                  if (newPeers != null && newPeers.length > 0) {
+                  if (newPeers.length > 0) {
                     // add peers to peer array
                     peerList = peerList.concat(newPeers);
                     console.log('Update existing peer %s%s [%s/%s]', address, (port == null || port == '' ? '' : ':' + port.toString()), (i + 1).toString(), body.length.toString());
@@ -1471,7 +1471,7 @@ if (lib.is_locked([database]) == false) {
                   });
 
                   // check if any peers should be saved
-                  if (newPeers != null && newPeers.length > 0) {
+                  if (newPeers.length > 0) {
                     // set up the rate limit library to limit how fast external api calls are made
                     const rateLimitLib = require('../lib/ratelimit');
                     const rateLimit = new rateLimitLib.RateLimit(1, settings.sync.rate_limit.peer_sync_rate_limit, false);
