@@ -1012,7 +1012,7 @@ app.use('/ext/getnetworkchartdata', function(req, res) {
     if (data)
       res.send(data);
     else
-      res.send();
+      res.send([]);
   });
 });
 
