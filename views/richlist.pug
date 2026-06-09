@@ -175,13 +175,14 @@ block content
                   th.text-center Amount
                     span.small.fw-normal  (#{settings.coin.symbol})
                   th.text-center %
+              - let totalParts = []; let percentParts = [];
               tbody
                 tr
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[0] + ';'))
                     span #{settings.localization.rl_top25}
-                  - let totalParts = dista.totalFixed.split('.');
-                  - let percentParts = dista.percentFixed.split('.');
+                  - totalParts = dista.totalFixed.split('.');
+                  - percentParts = dista.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -190,8 +191,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[1] + ';'))
                     span #{settings.localization.rl_top50}
-                  - let totalParts = distb.totalFixed.split('.');
-                  - let percentParts = distb.percentFixed.split('.');
+                  - totalParts = distb.totalFixed.split('.');
+                  - percentParts = distb.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -200,8 +201,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[2] + ';'))
                     span #{settings.localization.rl_top75}
-                  - let totalParts = distc.totalFixed.split('.');
-                  - let percentParts = distc.percentFixed.split('.');
+                  - totalParts = distc.totalFixed.split('.');
+                  - percentParts = distc.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -210,8 +211,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[3] + ';'))
                     span #{settings.localization.rl_top100}
-                  - let totalParts = distd.totalFixed.split('.');
-                  - let percentParts = distd.percentFixed.split('.');
+                  - totalParts = distd.totalFixed.split('.');
+                  - percentParts = distd.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -219,8 +220,8 @@ block content
                 tr.text-end
                   td.fw-bold
                     span #{settings.localization.total_top_100}
-                  - let totalParts = distsubtotal.totalFixed.split('.');
-                  - let percentParts = distsubtotal.percentFixed.split('.');
+                  - totalParts = distsubtotal.totalFixed.split('.');
+                  - percentParts = distsubtotal.percentFixed.split('.');
                   td.text-center.fw-bold.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.fw-bold.text-center #{percentParts[0]}.
@@ -229,8 +230,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[4] + ';'))
                     span 101+
-                  - let totalParts = diste.totalFixed.split('.');
-                  - let percentParts = diste.percentFixed.split('.');
+                  - totalParts = diste.totalFixed.split('.');
+                  - percentParts = diste.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -240,8 +241,8 @@ block content
                     td.fw-bold
                       div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[5] + ';'))
                       span Burned Coins
-                    - let totalParts = burned.totalFixed.split('.');
-                    - let percentParts = burned.percentFixed.split('.');
+                    - totalParts = burned.totalFixed.split('.');
+                    - percentParts = burned.percentFixed.split('.');
                     td.text-center.breakWord #{totalParts[0]}.
                       span.decimal.breakWord #{totalParts[1]}
                     td.text-center #{percentParts[0]}.
@@ -249,8 +250,8 @@ block content
                 tr.text-end
                   td.fw-bold
                     span #{settings.localization.total}
-                  - let totalParts = disttotal.totalFixed.split('.');
-                  - let percentParts = disttotal.percentFixed.split('.');
+                  - totalParts = disttotal.totalFixed.split('.');
+                  - percentParts = disttotal.percentFixed.split('.');
                   td.text-center.fw-bold.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.fw-bold.text-center #{percentParts[0]}.

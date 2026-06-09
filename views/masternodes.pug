@@ -22,7 +22,7 @@ block content
         let m = Math.floor(d % 3600 / 60);
         let s = Math.floor(d % 3600 % 60);
         let dy = Math.floor(h / 24);
-        let h = h % 24;
+        h = h % 24;
         return ('0' + dy).slice(-2) + " day" + (('0' + dy).slice(-2) == 1 ? "" : "s") + " " + ('0' + h).slice(-2) + "h " + ('0' + m).slice(-2) + "m " + ('0' + s).slice(-2) + "s";
     }
     $(document).ready(function() {

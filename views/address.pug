@@ -31,10 +31,11 @@ block content
       lengthMenuOpts.push(setting_txPerPage);
     if (!addedLength && setting_txPerPage > setting_maxTxCount && setting_maxTxCount != lengthMenuOpts[lengthMenuOpts.length - 1])
       lengthMenuOpts.push(setting_maxTxCount);
+    let displayLengthMax;
     if (setting_maxTxCount < setting_txPerPage) {
-      let displayLengthMax = setting_maxTxCount;
+      displayLengthMax = setting_maxTxCount;
     } else {
-      let displayLengthMax = setting_txPerPage;
+      displayLengthMax = setting_txPerPage;
     }
     $(document).ready(function () {
       let rtable = $('#address-txs').dataTable({
