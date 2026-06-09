@@ -1051,13 +1051,13 @@
   "markets_page": {
     // enabled: Enable/disable the markets pages (true/false)
     //          If set to false, all market pages will be completely inaccessible
-    "enabled": true,
+    "enabled": false,
     // show_panels: Determine whether to show the panels configured in the shared_pages.page_header section across the top of this page (true/false)
-    "show_panels": true,
+    "show_panels": false,
     // show_nethash_chart: Determine whether to show the network hashrate chart configured in the shared_pages.network_charts.nethash_chart section across the top of this page (true/false)
-    "show_nethash_chart": true,
+    "show_nethash_chart": false,
     // show_difficulty_chart: Determine whether to show the network difficulty chart configured in the shared_pages.network_charts.difficulty_chart section across the top of this page (true/false)
-    "show_difficulty_chart": true,
+    "show_difficulty_chart": false,
     // page_header: a collection of settings that pertain to the markets page header
     "page_header": {
       // show_img: Determine whether to show the page title image defined in the "shared_pages.page_header.page_title_image" setting (true/false)
@@ -1095,18 +1095,7 @@
         //                All entries must specify your coins symbol as it is displayed on the exchange, followed by a slash (/) and ending with the symbol of the market or asset that is being traded against
         //                Ex: "LTC/BTC", "LTC/USDT", "LTC/ETH"
         "trading_pairs": [ "LTC/USDT" ]
-      },
-    // exbitron: a collection of settings that pertain to the exbitron exchange
-    "exbitron": {
-      // enabled: Enable/disable the exbitron exchange (true/false)
-      //          If set to false, the exbitron page will be completely inaccessible and no market data will be downloaded for this exchange
-      "enabled": true,
-      // trading_pairs: An array of market trading pair symbols
-      //                You can add as many trading pairs as necessary
-      //                All entries must specify your coins symbol as it is displayed on the exchange, followed by a slash (/) and ending with the symbol of the market or asset that is being traded against
-      //                Ex: "LTC/BTC", "LTC/USDT", "LTC/ETH"
-      "trading_pairs": [ "BTE/USDT" ]
-    }
+      }
   },
     // market_price: Determine how to calculate the market price
     //               NOTE: The market price is always retrieved at the end of the market sync process
@@ -1131,7 +1120,7 @@
     "default_exchange": {
       // exchange_name: The name of the default exchange must exactly match the name of an exchange in the "exchanges" setting above
       //                See the list of supported exchanges above for the list of supported exchange names
-      "exchange_name": "exbitron",
+      "exchange_name": "nonkyc",
       // trading_pair: The name of the trading pair for the default exchange must exactly match the name of a trading pair from the "exchanges" setting above
       "trading_pair": "BTE/USDT"
     }
