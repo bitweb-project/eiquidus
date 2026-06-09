@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  - var selected_captcha_object = null
-  - var selected_captcha_name = ''
+  - let selected_captcha_object = null
+  - let selected_captcha_name = ''
   if settings.claim_address_page.enable_captcha == true
     each captcha, name in settings.captcha
       if selected_captcha_object == null && captcha != null && captcha.enabled == true
@@ -21,11 +21,11 @@ block content
         });
         $('#claimForm').on('submit', function (e) {
           e.preventDefault();
-          var address = $('input#address').val();
-          var message = $('input#message').val();
-          var signature = $('input#signature').val();
-          var recaptcha2 = ($('#g-recaptcha-response').length > 0 ? $('#g-recaptcha-response').val() : '');
-          var hcaptcha = ($('textarea[name^="h-captcha-response"]').length > 0 ? $('textarea[name^="h-captcha-response"]').val() : '');
+          let address = $('input#address').val();
+          let message = $('input#message').val();
+          let signature = $('input#signature').val();
+          let recaptcha2 = ($('#g-recaptcha-response').length > 0 ? $('#g-recaptcha-response').val() : '');
+          let hcaptcha = ($('textarea[name^="h-captcha-response"]').length > 0 ? $('textarea[name^="h-captcha-response"]').val() : '');
           
           if (address == null || address.trim().length == 0) {
             showClaimAlert('warning', 'Please enter the wallet address you wish to claim', false);
@@ -66,8 +66,8 @@ block content
             }
           }
         });
-        var __hash = !{JSON.stringify(hash != null ? String(hash) : '')};
-        var __claimName = !{JSON.stringify(claim_name != null ? String(claim_name) : '')};
+        let __hash = !{JSON.stringify(hash != null ? String(hash) : '')};
+        let __claimName = !{JSON.stringify(claim_name != null ? String(claim_name) : '')};
         if (__hash !== 'null' && __hash !== '') {
           $('<div id="claimAlert"></div>').insertBefore('#claimForm');
           $('#claimAlert').html(generateAlertHTML('info', true, (__claimName === '' ? 'Unc' : 'C') + 'laimed address', '<strong>' + displayAsText(__hash) + '</strong> is currently ' + (__claimName === '' ? 'un' : '') + 'claimed' + (__claimName === '' ? '' : ' as <strong>' + displayAsText(__claimName) + '.</strong>')));

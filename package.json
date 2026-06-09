@@ -6,7 +6,7 @@
     "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
-"scripts": {
+  "scripts": {
     "start": "node --stack-size=10000 ./bin/cluster",
     "stop": "node ./scripts/stop_explorer.js",
     "start-instance": "npm run prestart && node --stack-size=10000 ./bin/cluster 1",
@@ -51,6 +51,8 @@
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1",
     "forever": "^4.0.3",
     "jasmine": "^6.1.0",
     "pm2": "^6.0.5"

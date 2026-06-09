@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var PeersSchema = new Schema({
+let PeersSchema = new Schema({
   createdAt: { type: Date, expires: 86400, default: Date.now },
   address: { type: String, default: "", index: true },
   port: { type: String, default: "" },

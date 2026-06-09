@@ -4,10 +4,10 @@ const minNodeVersionMinor = '19';
 const minNodeVersionRevision = '0';
 
 // get the nodejs version
-var nodeVersion = process.version;
-var nodeVersionMajor = '0';
-var nodeVersionMinor = '0';
-var nodeVersionRevision = '0';
+let nodeVersion = process.version;
+let nodeVersionMajor = '0';
+let nodeVersionMinor = '0';
+let nodeVersionRevision = '0';
 
 // check if the nodejs version # is blank or a very long string as that would usually indicate a problem
 if (nodeVersion != null && nodeVersion != '' && nodeVersion.length < 16) {
@@ -16,7 +16,7 @@ if (nodeVersion != null && nodeVersion != '' && nodeVersion.length < 16) {
     nodeVersion = nodeVersion.slice(1);
 
   // split node version string into major, minor and revision
-  var splitVersion = nodeVersion.split('.');
+  let splitVersion = nodeVersion.split('.');
 
   nodeVersionMajor = splitVersion[0];
 
@@ -56,7 +56,7 @@ function check_arguments_passed(cb) {
         // run a cmd to check if pm2 is installed
         exec(`npm list${(isWinOS ? ' -g' : '')} pm2`, (err, stdout, stderr) => {
           // split stdout string by new line
-          var splitResponse = (stdout == null ? '' : stdout.trim()).split('\n').filter(element => element);
+          let splitResponse = (stdout == null ? '' : stdout.trim()).split('\n').filter(element => element);
 
           // check if the cmd result contains an @ symbol
           if (splitResponse[1].indexOf('@') == -1) {
@@ -75,7 +75,7 @@ function check_arguments_passed(cb) {
         // run a cmd to check if forever is installed
         exec('npm list forever', (err, stdout, stderr) => {
           // split stdout string by new line
-          var splitResponse = (stdout == null ? '' : stdout.trim()).split('\n').filter(element => element);
+          let splitResponse = (stdout == null ? '' : stdout.trim()).split('\n').filter(element => element);
 
           // check if the cmd result contains an @ symbol
           if (splitResponse[1].indexOf('@') == -1) {

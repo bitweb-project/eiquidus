@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
    Schema = mongoose.Schema;
 
-var OrphanSchema = new Schema({
+let OrphanSchema = new Schema({
   blockindex: {type: Number, default: 0, index: true},
   orphan_blockhash: {type: String, unique: true, index: true},
   good_blockhash: {type: String, index: true},

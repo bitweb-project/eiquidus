@@ -2,12 +2,12 @@ extends layout
 
 block content
   script.
-    var hashAddress = "#{address.a_id}";
-    var setting_maxTxCount = parseInt("#{settings.api_page.public_apis.ext.getaddresstxs.max_items_per_query}");
-    var setting_txPerPage = parseInt("#{settings.address_page.history_table.items_per_page}");
-    var lengthMenuOptsAdd = !{JSON.stringify(settings.address_page.history_table.page_length_options)};
-    var lengthMenuOpts = [];
-    var addedLength = false;
+    let hashAddress = "#{address.a_id}";
+    let setting_maxTxCount = parseInt("#{settings.api_page.public_apis.ext.getaddresstxs.max_items_per_query}");
+    let setting_txPerPage = parseInt("#{settings.address_page.history_table.items_per_page}");
+    let lengthMenuOptsAdd = !{JSON.stringify(settings.address_page.history_table.page_length_options)};
+    let lengthMenuOpts = [];
+    let addedLength = false;
     for (i = 0; i < lengthMenuOptsAdd.length; i++) {
       if (setting_maxTxCount >= lengthMenuOptsAdd[i]) {
         if (!addedLength) {
@@ -32,12 +32,12 @@ block content
     if (!addedLength && setting_txPerPage > setting_maxTxCount && setting_maxTxCount != lengthMenuOpts[lengthMenuOpts.length - 1])
       lengthMenuOpts.push(setting_maxTxCount);
     if (setting_maxTxCount < setting_txPerPage) {
-      var displayLengthMax = setting_maxTxCount;
+      let displayLengthMax = setting_maxTxCount;
     } else {
-      var displayLengthMax = setting_txPerPage;
+      let displayLengthMax = setting_txPerPage;
     }
     $(document).ready(function () {
-      var rtable = $('#address-txs').dataTable({
+      let rtable = $('#address-txs').dataTable({
         autoWidth: true,
         searching: false,
         ordering: false,
@@ -99,10 +99,10 @@ block content
       if (#{settings.shared_pages.page_header.page_title_image.enable_animation} == true && #{settings.address_page.page_header.show_img} == true)
         startRotateElement('img#header-img');
     });
-  - var balanceParts = balance.split('.');
-  - var sentParts = sent.split('.');
-  - var receivedParts = received.split('.');
-  - var theadClasses = [];
+  - let balanceParts = balance.split('.');
+  - let sentParts = sent.split('.');
+  - let receivedParts = received.split('.');
+  - let theadClasses = [];
   if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
     - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
   .col-xs-12.col-md-12

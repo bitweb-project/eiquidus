@@ -2,9 +2,9 @@ extends layout
 
 block content
   script.
-    var setting_txPerPage = parseInt("#{settings.orphans_page.orphans_table.items_per_page}");
-    var lengthMenuOpts = !{JSON.stringify(settings.orphans_page.orphans_table.page_length_options)};
-    var addedLength = false;
+    let setting_txPerPage = parseInt("#{settings.orphans_page.orphans_table.items_per_page}");
+    let lengthMenuOpts = !{JSON.stringify(settings.orphans_page.orphans_table.page_length_options)};
+    let addedLength = false;
     for (i = 0; i < lengthMenuOpts.length; i++) {
       if (!addedLength) {
         if (lengthMenuOpts[i] > setting_txPerPage) {
@@ -17,7 +17,7 @@ block content
     if (!addedLength && setting_txPerPage != lengthMenuOpts[lengthMenuOpts.length - 1])
       lengthMenuOpts.push(setting_txPerPage);
     $(document).ready(function() {
-      var otable = $('#orphans-table').dataTable({
+      let otable = $('#orphans-table').dataTable({
         autoWidth: true,
         searching: false,
         ordering: false,
@@ -41,11 +41,11 @@ block content
           }
         },
         rowCallback: function(row, data, index) {
-          var blockindex = data[0];
-          var orphan_blockhash = data[1];
-          var good_blockhash = data[2];
-          var prev_blockhash = data[3];
-          var next_blockhash = data[4];
+          let blockindex = data[0];
+          let orphan_blockhash = data[1];
+          let good_blockhash = data[2];
+          let prev_blockhash = data[3];
+          let next_blockhash = data[4];
           $("td:eq(0)", row).html('<a href="/block/' + orphan_blockhash + '"><span class="fa-regular fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="#{settings.localization.view_orphan}"></span></a>').addClass('text-center d-table-cell d-md-none');
           $("td:eq(1)", row).html('<a href="/block/' + orphan_blockhash + '">' + orphan_blockhash + '</a>').addClass('breakWord d-none d-md-table-cell');
           $("td:eq(2)", row).html('<a href="/block/' + good_blockhash + '">' + blockindex.toString() + '</a>').addClass('text-center');
@@ -64,7 +64,7 @@ block content
       });
 
       if ('#{settings.orphans_page.page_header.show_last_updated}' == 'true') {
-        var lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
+        let lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
 
         if (lastUpdatedDate != 0) {
           $('span#lastUpdatedDate').html(' ' + format_unixtime(lastUpdatedDate));
@@ -109,7 +109,7 @@ block content
       .card-header
         strong=settings.localization.orphan_block_list
       table#orphans-table.table.table-bordered.table-striped.table-paging.table-hover.mobile-border-right
-        - var theadClasses = [];
+        - let theadClasses = [];
         if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
           - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
         thead

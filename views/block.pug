@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  - var theadClasses = [];
+  - let theadClasses = [];
   if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
     - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
   script.
@@ -85,8 +85,8 @@ block content
             th.text-center #{settings.localization.nonce}
             th.text-center #{settings.localization.timestamp}
         tbody
-          - var splitDifficulty = block.difficulty.split('.');
-          - var splitBlockSize = block.size.split('.');
+          - let splitDifficulty = block.difficulty.split('.');
+          - let splitBlockSize = block.size.split('.');
           tr
             td.text-center=block.height
             td.text-center #{splitDifficulty[0]}.
@@ -131,7 +131,7 @@ block content
           tbody
             each txn in txs
               tr
-                - var totalParts = txn.totalFixed.split('.');
+                - let totalParts = txn.totalFixed.split('.');
                 td.text-center.d-table-cell.d-md-none
                   a(href='/tx/' + txn.txid)
                     span.fa-regular.fa-eye(data-bs-toggle='tooltip', data-bs-placement='top', title=settings.localization.view_tx)

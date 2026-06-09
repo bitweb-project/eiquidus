@@ -3,7 +3,7 @@ extends layout
 block content
   script.
     function generateLengthMenu(setting_txPerPage, lengthMenuOpts) {
-      var addedLength = false;
+      let addedLength = false;
       for (i = 0; i < lengthMenuOpts.length; i++) {
         if (!addedLength) {
           if (lengthMenuOpts[i] > setting_txPerPage) {
@@ -204,7 +204,7 @@ block content
         }
       });
     });
-  - var theadClasses = [];
+  - let theadClasses = [];
   if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
     - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
   .col-md-12.cardSpacer

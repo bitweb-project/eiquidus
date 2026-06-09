@@ -4,7 +4,7 @@ block content
   script.
     $(document).ready(function() {
       if ('#{settings.markets_page.page_header.show_last_updated}' == 'true') {
-        var lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
+        let lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
 
         if (lastUpdatedDate != 0) {
           $('span#lastUpdatedDate').html(' ' + format_unixtime(lastUpdatedDate));
@@ -19,7 +19,7 @@ block content
       if (#{settings.shared_pages.page_header.page_title_image.enable_animation} == true && #{settings.markets_page.page_header.show_img} == true)
         startRotateElement('img#header-img');
     });
-  - var theadClasses = [];
+  - let theadClasses = [];
   if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
     - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
   if marketdata.data != null && ((marketdata.data.buys != null && marketdata.data.buys.length > 0) || (marketdata.data.sells != null && marketdata.data.sells.length > 0) || (marketdata.data.history != null && marketdata.data.history.length > 0))
@@ -174,7 +174,7 @@ block content
           $(document).ready(function() {
             let chartData = !{JSON.stringify(marketdata.data.chartdata != null && marketdata.data.chartdata !== 'null' && marketdata.data.chartdata !== '' && marketdata.data.chartdata !== '[]' && marketdata.data.chartdata.length > 0 ? marketdata.data.chartdata : null)};
 
-            var chartCanvas = document.getElementById('chart');
+            let chartCanvas = document.getElementById('chart');
             if (chartCanvas != null && chartData != null && chartData.length > 0) {
               try {
               chartData = chartData.map(function(item) {
@@ -201,7 +201,7 @@ block content
 
               Chart.register(backgroundPlugin);
 
-              var ohlcvChart = new Chart('chart', {
+              let ohlcvChart = new Chart('chart', {
                 type: 'candlestick',
                 data: {
                   datasets: [{
@@ -336,39 +336,39 @@ block content
                   tr
                     if marketdata.data.summary != null
                       if marketdata.data.summary.high != null
-                        - var splitHigh = marketdata.data.summary.high.split('.');
+                        - let splitHigh = marketdata.data.summary.high.split('.');
                         td.text-center #{splitHigh[0]}.
                           span.decimal #{splitHigh[1]}
                       if marketdata.data.summary.low != null
-                        - var splitLow = marketdata.data.summary.low.split('.');
+                        - let splitLow = marketdata.data.summary.low.split('.');
                         td.text-center #{splitLow[0]}.
                           span.decimal #{splitLow[1]}
                       if marketdata.data.summary.volume != null
-                        - var splitVolume = marketdata.data.summary.volume.split('.');
+                        - let splitVolume = marketdata.data.summary.volume.split('.');
                         td.text-center #{splitVolume[0]}.
                           span.decimal #{splitVolume[1]}
                       if marketdata.data.summary.volume_btc != null
-                        - var splitVolumeBTC = marketdata.data.summary.volume_btc.split('.');
+                        - let splitVolumeBTC = marketdata.data.summary.volume_btc.split('.');
                         td.text-center #{splitVolumeBTC[0]}.
                           span.decimal #{splitVolumeBTC[1]}
                       if marketdata.data.summary.bid != null
-                        - var splitBid = marketdata.data.summary.bid.split('.');
+                        - let splitBid = marketdata.data.summary.bid.split('.');
                         td.text-center #{splitBid[0]}.
                           span.decimal #{splitBid[1]}
                       if marketdata.data.summary.ask != null
-                        - var splitAsk = marketdata.data.summary.ask.split('.');
+                        - let splitAsk = marketdata.data.summary.ask.split('.');
                         td.text-center #{splitAsk[0]}.
                           span.decimal #{splitAsk[1]}
                       if marketdata.data.summary.last != null
-                        - var splitLast = marketdata.data.summary.last.split('.');
+                        - let splitLast = marketdata.data.summary.last.split('.');
                         td.text-center #{splitLast[0]}.
                           span.decimal #{splitLast[1]}
                       if marketdata.data.summary.prev != null
-                        - var splitPrev = marketdata.data.summary.prev.split('.');
+                        - let splitPrev = marketdata.data.summary.prev.split('.');
                         td.text-center #{splitPrev[0]}.
                           span.decimal #{splitPrev[1]}
                       if marketdata.data.summary.change != null || (marketdata.data.summary.last != null && marketdata.data.summary.prev != null)
-                        - var splitChange = marketdata.data.summary.change.split('.');
+                        - let splitChange = marketdata.data.summary.change.split('.');
                         if marketdata.data.summary.change_num > 0
                           td.text-center.text-success.fw-bold +#{splitChange[0]}.
                             span.decimal #{splitChange[1]}
@@ -420,9 +420,9 @@ block content
                 tbody
                   if marketdata.data.buys != null
                     each buy in marketdata.data.buys
-                      - var splitPrice = buy.price.split('.');
-                      - var splitQuantity = buy.quantity.split('.');
-                      - var splitTotal = buy.total.split('.');
+                      - let splitPrice = buy.price.split('.');
+                      - let splitQuantity = buy.quantity.split('.');
+                      - let splitTotal = buy.total.split('.');
                       tr
                         td.text-center.text-success.fw-bold #{splitPrice[0]}.
                           span.decimal #{splitPrice[1]}
@@ -448,9 +448,9 @@ block content
                 tbody
                   if marketdata.data.sells != null
                     each sell in marketdata.data.sells
-                      - var splitPrice = sell.price.split('.');
-                      - var splitQuantity = sell.quantity.split('.');
-                      - var splitTotal = sell.total.split('.');
+                      - let splitPrice = sell.price.split('.');
+                      - let splitQuantity = sell.quantity.split('.');
+                      - let splitTotal = sell.total.split('.');
                       tr
                         td.text-center.text-danger.fw-bold #{splitPrice[0]}.
                           span.decimal #{splitPrice[1]}                  
@@ -479,9 +479,9 @@ block content
                   if marketdata.data.history != null
                     each order in marketdata.data.history
                       if order.ordertype != null
-                        - var splitPrice = order.price.split('.');
-                        - var splitQuantity = order.quantity.split('.');
-                        - var splitTotal = order.total.split('.');
+                        - let splitPrice = order.price.split('.');
+                        - let splitQuantity = order.quantity.split('.');
+                        - let splitTotal = order.total.split('.');
                         if order.ordertype.toUpperCase() == 'BUY'
                           tr
                             td.text-center.text-success.fw-bold #{splitPrice[0]}.

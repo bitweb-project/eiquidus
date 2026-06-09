@@ -1,4 +1,4 @@
-var express = require('express'),
+const express = require('express'),
     path = require('path'),
     nodeapi = require('./lib/nodeapi'),
     favicon = require('serve-favicon'),
@@ -9,10 +9,10 @@ var express = require('express'),
     lib = require('./lib/explorer'),
     db = require('./lib/database'),
     package_metadata = require('./package.json');
-var app = express();
-var apiAccessList = [];
-var viewPaths = [path.join(__dirname, 'views')];
-var pluginRoutes = [];
+const app = express();
+const apiAccessList = [];
+const viewPaths = [path.join(__dirname, 'views')];
+const pluginRoutes = [];
 const { exec } = require('child_process');
 const Decimal = require('decimal.js');
 
@@ -89,7 +89,7 @@ settings.plugins.allowed_plugins.forEach(function (plugin) {
       // check if the plugin's local_plugin_settings file exists
       if (db.fs.existsSync(`./plugins/${pluginName}/lib/local_plugin_settings.js`)) {
         // load the local_plugin_settings.js file from the plugin
-        let localPluginSettings = require(`./plugins/${pluginName}/lib/local_plugin_settings`);
+        const localPluginSettings = require(`./plugins/${pluginName}/lib/local_plugin_settings`);
 
         // loop through all local plugin settings
         Object.keys(localPluginSettings).forEach(function(key, index, map) {
@@ -162,7 +162,7 @@ settings.plugins.allowed_plugins.forEach(function (plugin) {
 app.set('views', viewPaths);
 app.set('view engine', 'pug');
 
-var default_favicon = '';
+let default_favicon = '';
 
 // loop through the favicons
 Object.keys(settings.shared_pages.favicons).forEach(function(key, index, map) {
@@ -428,14 +428,14 @@ app.use('/ext/getaddress/:hash', function(req, res) {
     db.get_address(req.params.hash, false, function(address) {
       db.get_address_txs_ajax(req.params.hash, 0, settings.api_page.public_apis.ext.getaddresstxs.max_items_per_query, function(txs, count) {
         if (address) {
-          let last_txs = [];
+          const last_txs = [];
 
           for (let i = 0; i < txs.length; i++) {
             if (typeof txs[i].txid !== "undefined") {
               let out = new Decimal('0');
               let vin = new Decimal('0');
               let tx_type = 'vout';
-              let row = {};
+              const row = {};
 
               txs[i].vout.forEach(function (r) {
                 if (r.addresses == req.params.hash)
@@ -477,7 +477,7 @@ app.use('/ext/getaddress/:hash', function(req, res) {
 app.use('/ext/gettx/:txid', function(req, res) {
   // check if the gettx api is enabled
   if (settings.api_page.enabled == true && settings.api_page.public_apis.ext.gettx.enabled == true) {
-    var txid = req.params.txid;
+    const txid = req.params.txid;
 
     db.get_tx(txid, function(tx) {
       if (tx) {
@@ -492,7 +492,7 @@ app.use('/ext/gettx/:txid', function(req, res) {
                 const total = lib.calculate_total(rvout);
 
                 if (!(rtx.confirmations > 0)) {
-                  var utx = {
+                  let utx = {
                     txid: rtx.txid,
                     vin: rvin,
                     vout: rvout,
@@ -504,7 +504,7 @@ app.use('/ext/gettx/:txid', function(req, res) {
 
                   res.send({ active: 'tx', tx: utx, confirmations: rtx.confirmations, blockcount:-1});
                 } else {
-                  var utx = {
+                  let utx = {
                     txid: rtx.txid,
                     vin: rvin,
                     vout: rvout,
@@ -611,9 +611,9 @@ app.use('/ext/getbasicstats', function(req, res) {
 app.use('/ext/getlasttxs/:min', function(req, res) {
   // check if the getlasttxs api is enabled or else check the headers to see if it matches an internal ajax request from the explorer itself (TODO: come up with a more secure method of whitelisting ajax calls from the explorer)
   if ((settings.api_page.enabled == true && settings.api_page.public_apis.ext.getlasttxs.enabled == true) || (req.headers['x-requested-with'] != null && req.headers['x-requested-with'].toLowerCase() == 'xmlhttprequest' && req.headers.referer != null && req.headers.accept.indexOf('text/javascript') > -1 && req.headers.accept.indexOf('application/json') > -1)) {
-    var min = req.params.min, start, length, internal = false;
+    let min = req.params.min, start, length, internal = false;
     // split url suffix by forward slash and remove blank entries
-    var split = req.url.split('/').filter(function(v) { return v; });
+    const split = req.url.split('/').filter(function(v) { return v; });
     // determine how many parameters were passed
     switch (split.length) {
       case 2:
@@ -684,7 +684,7 @@ app.use('/ext/getaddresstxs/:address/:start/:length', function(req, res) {
       req.params.min  = (req.params.min * 100000000);
 
     db.get_address_txs_ajax(req.params.address, req.params.start, req.params.length, function(txs, count) {
-      let data = [];
+      const data = [];
 
       for (let i = 0; i < txs.length; i++) {
         if (typeof txs[i].txid !== "undefined") {
@@ -703,7 +703,7 @@ app.use('/ext/getaddresstxs/:address/:start/:length', function(req, res) {
           });
 
           if (internal) {
-            let row = [];
+            const row = [];
             let updown = '';
             let amount;
             let amountString = '';
@@ -827,7 +827,7 @@ app.use('/ext/getsummary', function(req, res) {
                   }
                 }
 
-                let send_data = {
+                const send_data = {
                   difficulty: (difficulty == null || difficulty == '' ? '-' : difficulty),
                   difficultyHybrid: difficultyHybrid,
                   supply: new Decimal(stats == null || stats.supply == null ? '0' : stats.supply.toString()).toFixed(),
@@ -963,10 +963,10 @@ app.use('/ext/getorphanlist/:start/:length', function(req, res) {
 
     // get the orphan list from local collection
     db.get_orphans(req.params.start, req.params.length, function(orphans, count) {
-      var data = [];
+      const data = [];
 
       for (let i = 0; i < orphans.length; i++) {
-        var row = [];
+        const row = [];
 
         row.push(orphans[i].blockindex);
         row.push(orphans[i].orphan_blockhash);
@@ -1029,14 +1029,14 @@ app.use('/system/restartexplorer', function(req, res, next) {
     res.end();
   } else {
     // show the error page
-    var err = new Error(settings.localization.error_not_found);
+    const err = new Error(settings.localization.error_not_found);
     err.status = 404;
     next(err);
   }
 });
 
-var market_data = [];
-var market_count = 0;
+const market_data = [];
+let market_count = 0;
 
 // check if markets are enabled
 if (settings.markets_page.enabled == true) {
@@ -1047,7 +1047,7 @@ if (settings.markets_page.enabled == true) {
       // check if market is installed/supported
       if (db.fs.existsSync('./lib/markets/' + key + '.js')) {
         // load market file
-        var exMarket = require('./lib/markets/' + key);
+        const exMarket = require('./lib/markets/' + key);
         // save market_name and market_logo from market file to settings
         market_data.push({
           id: key,
@@ -1058,11 +1058,11 @@ if (settings.markets_page.enabled == true) {
           trading_pairs: []
         });
         // loop through all trading pairs for this market
-        for (var i = 0; i < settings.markets_page.exchanges[key].trading_pairs.length; i++) {
-          var isAlt = false;
-          var pair = settings.markets_page.exchanges[key].trading_pairs[i].toUpperCase(); // ensure trading pair setting is always uppercase
-          var coin_symbol = pair.split('/')[0];
-          var pair_symbol = pair.split('/')[1];
+        for (let i = 0; i < settings.markets_page.exchanges[key].trading_pairs.length; i++) {
+          let isAlt = false;
+          const pair = settings.markets_page.exchanges[key].trading_pairs[i].toUpperCase(); // ensure trading pair setting is always uppercase
+          const coin_symbol = pair.split('/')[0];
+          const pair_symbol = pair.split('/')[1];
 
           // determine if using the alt name + logo
           if (exMarket.market_url_template != null && exMarket.market_url_template != '') {
@@ -1104,8 +1104,8 @@ if (settings.markets_page.enabled == true) {
 
   // sort market data by market name
   market_data.sort(function(a, b) {
-    var name1 = a.name.toLowerCase();
-    var name2 = b.name.toLowerCase();
+    const name1 = a.name.toLowerCase();
+    const name2 = b.name.toLowerCase();
 
     if (name1 < name2)
       return -1;
@@ -1127,11 +1127,11 @@ if (settings.markets_page.enabled == true) {
   else
     settings.markets_page.default_exchange.trading_pair = '';
 
-  var ex = settings.markets_page.exchanges;
-  var ex_name = settings.markets_page.default_exchange.exchange_name;
-  var ex_pair = settings.markets_page.default_exchange.trading_pair;
-  var ex_keys = Object.keys(ex);
-  var ex_error = '';
+  const ex = settings.markets_page.exchanges;
+  const ex_name = settings.markets_page.default_exchange.exchange_name;
+  const ex_pair = settings.markets_page.default_exchange.trading_pair;
+  const ex_keys = Object.keys(ex);
+  let ex_error = '';
 
   // check to ensure default market and trading pair exist and are enabled
   if (ex[ex_name] == null) {
@@ -1148,10 +1148,10 @@ if (settings.markets_page.enabled == true) {
   // check if there was an error msg
   if (ex_error != '') {
     // there was an error, so find the next available market from settings.json
-    var new_default_index = -1;
+    let new_default_index = -1;
 
     // find the first enabled exchange with at least one trading pair
-    for (var i = 0; i < ex_keys.length; i++) {
+    for (let i = 0; i < ex_keys.length; i++) {
       if (ex[ex_keys[i]]['enabled'] === true && ex[ex_keys[i]]['trading_pairs'].length > 0) {
         // found a match so save the index
         new_default_index = i;
@@ -1210,8 +1210,8 @@ app.set('blockchain_specific', settings.blockchain_specific);
 app.set('plugins', settings.plugins);
 
 // determine panel offset based on which panels are enabled
-var paneltotal = 5;
-var panelcount = (settings.shared_pages.page_header.panels.network_panel.enabled == true && settings.shared_pages.page_header.panels.network_panel.display_order > 0 ? 1 : 0) +
+const paneltotal = 5;
+const panelcount = (settings.shared_pages.page_header.panels.network_panel.enabled == true && settings.shared_pages.page_header.panels.network_panel.display_order > 0 ? 1 : 0) +
   (settings.shared_pages.page_header.panels.difficulty_panel.enabled == true && settings.shared_pages.page_header.panels.difficulty_panel.display_order > 0 ? 1 : 0) +
   (settings.shared_pages.page_header.panels.masternodes_panel.enabled == true && settings.shared_pages.page_header.panels.masternodes_panel.display_order > 0 ? 1 : 0) +
   (settings.shared_pages.page_header.panels.coin_supply_panel.enabled == true && settings.shared_pages.page_header.panels.coin_supply_panel.display_order > 0 ? 1 : 0) +
@@ -1226,7 +1226,7 @@ var panelcount = (settings.shared_pages.page_header.panels.network_panel.enabled
 app.set('paneloffset', paneltotal + 1 - panelcount);
 
 // determine panel order
-var panel_order = new Array();
+const panel_order = new Array();
 
 if (settings.shared_pages.page_header.panels.network_panel.enabled == true && settings.shared_pages.page_header.panels.network_panel.display_order > 0) panel_order.push({name: 'network_panel', val: settings.shared_pages.page_header.panels.network_panel.display_order});
 if (settings.shared_pages.page_header.panels.difficulty_panel.enabled == true && settings.shared_pages.page_header.panels.difficulty_panel.display_order > 0) panel_order.push({name: 'difficulty_panel', val: settings.shared_pages.page_header.panels.difficulty_panel.display_order});
@@ -1243,7 +1243,7 @@ if (settings.shared_pages.page_header.panels.spacer_panel_3.enabled == true && s
 
 panel_order.sort(function(a,b) { return a.val - b.val; });
 
-for (var i = 1; i < 6; i++)
+for (let i = 1; i < 6; i++)
   app.set('panel'+i.toString(), ((panel_order.length >= i) ? panel_order[i-1].name : ''));
 
 app.set('market_data', market_data);
@@ -1251,7 +1251,7 @@ app.set('market_count', market_count);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+    const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -1268,7 +1268,7 @@ app.use(function(err, req, res, next) {
 // determine if tls features should be enabled
 if (settings.webserver.tls.enabled == true) {
   function readCertsSync() {
-    var tls_options = {};
+    let tls_options = {};
 
     try {
       tls_options = {
@@ -1284,7 +1284,7 @@ if (settings.webserver.tls.enabled == true) {
   }
 
   const https = require('https');
-  let httpd = https.createServer(readCertsSync(), app).listen(settings.webserver.tls.port);
+  const httpd = https.createServer(readCertsSync(), app).listen(settings.webserver.tls.port);
 
   try {
     let waitForCertsToRefresh;

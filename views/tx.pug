@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  - var theadClasses = [];
+  - let theadClasses = [];
   if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
     - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
   script.
@@ -57,7 +57,7 @@ block content
             th.text-center #{settings.localization.confirmations}
             th.text-center #{settings.localization.timestamp}
         tbody
-          - var confirms = (blockcount - tx.blockindex + 1);
+          - let confirms = (blockcount - tx.blockindex + 1);
           tr
             td.text-center.d-table-cell.d-md-none
               a(href='/block/' + tx.blockhash)
@@ -105,7 +105,7 @@ block content
                       tr.table-info.text-center
                         td #{settings.localization.new_coins}
                     else
-                      - var ramountParts = address.amountFixed.split('.');
+                      - let ramountParts = address.amountFixed.split('.');
                       tr
                         td
                           if address.addresses != 'hidden_address' && address.addresses != 'unknown_address'
@@ -144,7 +144,7 @@ block content
                     span.small.fw-normal  (#{settings.coin.symbol})
               tbody
                 each address in tx.vout
-                  - var ramountParts = address.amountFixed.split('.');
+                  - let ramountParts = address.amountFixed.split('.');
                   if tx.vout.length > 0
                     tr
                       if address.addresses != 'hidden_address' && address.addresses != 'unknown_address'

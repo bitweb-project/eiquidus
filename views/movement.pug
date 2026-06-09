@@ -2,11 +2,11 @@ extends layout
 
 block content
   script.
-    var setting_maxTxCount = parseInt("#{settings.api_page.public_apis.ext.getlasttxs.max_items_per_query}");
-    var setting_txPerPage = parseInt("#{settings.movement_page.movement_table.items_per_page}");
-    var lengthMenuOptsAdd = !{JSON.stringify(settings.movement_page.movement_table.page_length_options)};
-    var lengthMenuOpts = [];
-    var addedLength = false;
+    let setting_maxTxCount = parseInt("#{settings.api_page.public_apis.ext.getlasttxs.max_items_per_query}");
+    let setting_txPerPage = parseInt("#{settings.movement_page.movement_table.items_per_page}");
+    let lengthMenuOptsAdd = !{JSON.stringify(settings.movement_page.movement_table.page_length_options)};
+    let lengthMenuOpts = [];
+    let addedLength = false;
     for (i = 0; i < lengthMenuOptsAdd.length; i++) {
       if (setting_maxTxCount >= lengthMenuOptsAdd[i]) {
         if (!addedLength) {
@@ -31,11 +31,11 @@ block content
     if (!addedLength && setting_txPerPage > setting_maxTxCount && setting_maxTxCount != lengthMenuOpts[lengthMenuOpts.length - 1])
       lengthMenuOpts.push(setting_maxTxCount);
     if (setting_maxTxCount < setting_txPerPage)
-      var displayLengthMax = setting_maxTxCount;
+      let displayLengthMax = setting_maxTxCount;
     else
-      var displayLengthMax = setting_txPerPage;
+      let displayLengthMax = setting_txPerPage;
     $(document).ready(function() {
-      var rtable = $('#movement-table').dataTable({
+      let rtable = $('#movement-table').dataTable({
         autoWidth: true,
         searching: false,
         ordering: false,
@@ -60,17 +60,17 @@ block content
         },
         rowCallback: function(row, data, index) {
           // variables for better readability
-          var blockindex = data[0];
-          var blockhash = data[1];
-          var txhash = data[2];
-          var outputs = data[3];
-          var amountString = data[4];
-          var timestamp = data[5];
+          let blockindex = data[0];
+          let blockhash = data[1];
+          let txhash = data[2];
+          let outputs = data[3];
+          let amountString = data[4];
+          let timestamp = data[5];
 
-          var amount = Number(amountString.replace(/,/g, ''));
-          var amountParts = amountString.split('.');
-          var amountStr = amountParts[0] + '.<span class="decimal">' + amountParts[1] + '</span>';
-          var total = "<label class='badge bg-" + (amount > '#{settings.movement_page.movement_table.high_warning_flag}' ? 'danger' : (amount > '#{settings.movement_page.movement_table.low_warning_flag}' ? 'warning' : 'success')) + "' style='margin-bottom:0;'>" + amountStr + "</label>";
+          let amount = Number(amountString.replace(/,/g, ''));
+          let amountParts = amountString.split('.');
+          let amountStr = amountParts[0] + '.<span class="decimal">' + amountParts[1] + '</span>';
+          let total = "<label class='badge bg-" + (amount > '#{settings.movement_page.movement_table.high_warning_flag}' ? 'danger' : (amount > '#{settings.movement_page.movement_table.low_warning_flag}' ? 'warning' : 'success')) + "' style='margin-bottom:0;'>" + amountStr + "</label>";
 
           $("td:eq(0)", row).html('<a href="/tx/' + txhash + '"><span class="fa-regular fa-eye" data-bs-toggle="tooltip" data-bs-placement="top" title="#{settings.localization.view_tx}"></span></a>').addClass('text-center d-table-cell d-md-none');
           $("td:eq(1)", row).html('<a href="/tx/' + txhash + '">' + txhash + '</a>').addClass('breakWord d-none d-md-table-cell');
@@ -96,7 +96,7 @@ block content
           $('span#lastUpdatedDate').html(' N/A');
       }
 
-      var setting_reload_table_seconds = parseInt("#{settings.movement_page.movement_table.reload_table_seconds}");
+      let setting_reload_table_seconds = parseInt("#{settings.movement_page.movement_table.reload_table_seconds}");
       if (setting_reload_table_seconds > 0) {
         setInterval(function () {
           rtable.api().ajax.reload(null, false);
@@ -115,7 +115,7 @@ block content
       }
 
       if ('#{settings.movement_page.page_header.show_last_updated}' == 'true') {
-        var lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
+        let lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
         update_last_updated(lastUpdatedDate);
       }
       if (#{settings.shared_pages.page_header.page_title_image.enable_animation} == true && #{settings.movement_page.page_header.show_img} == true)
@@ -151,7 +151,7 @@ block content
       .card-header
         strong="Latest Movement"
       table#movement-table.table.table-bordered.table-striped.table-paging.table-hover.mobile-border-right
-        - var theadClasses = [];
+        - let theadClasses = [];
         if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
           - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
         thead

@@ -483,7 +483,7 @@ function check_block_height_for_fork(block_height, cb) {
 }
 
 function create_orphan(blockindex, orphan_blockhash, good_blockhash, prev_blockhash, next_blockhash, cb) {
-  var newOrphan = new Orphans({
+  let newOrphan = new Orphans({
     blockindex: blockindex,
     orphan_blockhash: orphan_blockhash,
     good_blockhash: good_blockhash,
@@ -509,21 +509,21 @@ function get_orphaned_txids(block_hash, cb) {
   Tx.find({blockhash: block_hash}).exec().then((txes) => {
     if (txes.length > 0) {
       // found at least one orphaned transaction
-      var txids = [];
+      let txids = [];
 
       // populate an array of txids without the object data
       for (let t = 0; t < txes.length; t++)
         txids.push(txes[t].txid);
 
-      return cb(txids, null);
+      return cb(txids);
     } else {
       // no txes found
-      return cb([], null);
+      return cb([]);
     }
   }).catch((err) => {
     // an error was returned
     console.log(err);
-    return cb([], null);
+    return cb([]);
   });
 }
 
@@ -751,7 +751,7 @@ function coingecko_coin_list_api(market_symbols, cb) {
   }
 
   // loop through all symbols
-  for (var symbol of market_symbols) {
+  for (const symbol of market_symbols) {
     // check if this symbol has a default coingecko id in the settings
     const index = settings.default_coingecko_ids.findIndex(p => p.symbol.toLowerCase() == symbol.currency.toLowerCase());
 
@@ -1053,7 +1053,7 @@ function removeDuplicatePeersByType(table_type, enabled, port_filter, cb) {
         const ids = groups[i].ids || [];
         const toDelete = ids.slice(1);
 
-        for (var j = 0; j < toDelete.length; j++)
+        for (let j = 0; j < toDelete.length; j++)
           ops.push({ deleteOne: { filter: { _id: toDelete[j] } } });
       }
 
@@ -1178,7 +1178,7 @@ if (lib.is_locked([database]) == false) {
       }
     }
 
-    var dbString = 'mongodb://' + encodeURIComponent(settings.dbsettings.user);
+    let dbString = 'mongodb://' + encodeURIComponent(settings.dbsettings.user);
     dbString = dbString + ':' + encodeURIComponent(settings.dbsettings.password);
     dbString = dbString + '@' + settings.dbsettings.address;
     dbString = dbString + ':' + settings.dbsettings.port;
@@ -1295,7 +1295,7 @@ if (lib.is_locked([database]) == false) {
                   console.log(`${settings.localization.calculating_tx_count}.. ${settings.localization.please_wait}..`);
 
                   // resetting the transaction counter requires a single lookup on the txes collection to find all txes that have a positive or zero total and 1 or more vout
-                  Tx.find({'total': {$gte: 0}, 'vout.0': { $exists: true }}).countDocuments().then((count) => {
+                  Tx.find({'total': {$gte: 0}, 'vout': { $gte: { $size: 1 }}}).countDocuments().then((count) => {
                     console.log('Found tx count: ' + count.toString());
 
                     Stats.updateOne({coin: settings.coin.name}, {
@@ -1611,7 +1611,7 @@ if (lib.is_locked([database]) == false) {
                 total_pairs += settings.markets_page.exchanges[key].trading_pairs.length;
 
                 // loop through all trading pairs for this market
-                for (var i = 0; i < settings.markets_page.exchanges[key].trading_pairs.length; i++) {
+                for (let i = 0; i < settings.markets_page.exchanges[key].trading_pairs.length; i++) {
                   // ensure trading pair setting is always uppercase
                   settings.markets_page.exchanges[key].trading_pairs[i] = settings.markets_page.exchanges[key].trading_pairs[i].toUpperCase();
                 }

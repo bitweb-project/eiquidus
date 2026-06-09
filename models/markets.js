@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var MarketsSchema = new Schema({
+let MarketsSchema = new Schema({
   market: { type: String, index: true },
   coin_symbol: { type: String },
   pair_symbol: { type: String },

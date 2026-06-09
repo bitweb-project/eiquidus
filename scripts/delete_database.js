@@ -150,7 +150,7 @@ if (lib.is_locked([deleteLockName]) == false) {
   // ensure the lock will be deleted on exit
   lockCreated = true;
 
-  var lock_list = ['backup', 'restore', 'markets', 'peers', 'masternodes', 'plugin'];
+  let lock_list = ['backup', 'restore', 'markets', 'peers', 'masternodes', 'plugin'];
 
   // do not check the index lock if this is called from the reindex process
   if (process.argv[2] == null || process.argv[2] != 'reindex') {
@@ -184,7 +184,7 @@ if (lib.is_locked([deleteLockName]) == false) {
           mongoose.connection.db.listCollections().toArray().then((collections) => {
             // check if there are any collections
             if (collections.length > 0) {
-              var counter = 0;
+              let counter = 0;
 
               // loop through all collections
               collections.forEach((collection) => {

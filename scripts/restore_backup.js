@@ -314,7 +314,7 @@ if (process.argv[2] != null && process.argv[2] != '') {
 
                       // extract the backup archive
                       tar.x({ file: backupPath, cwd: defaultBackupPath, gzip: true }, function() {
-                        var extractedPath = path.join(defaultBackupPath, path.basename(backupPath).replace(oldArchiveSuffix, ''));
+                        let extractedPath = path.join(defaultBackupPath, path.basename(backupPath).replace(oldArchiveSuffix, ''));
 
                         // check if this is a valid backup archive now that the files have been extracted
                         if (fs.existsSync(`${path.join(extractedPath, settings.dbsettings.database)}`)) {

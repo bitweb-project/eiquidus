@@ -2,11 +2,11 @@ extends layout
 
 block content
   script.
-    var setting_maxTxCount = parseInt("#{settings.api_page.public_apis.ext.getlasttxs.max_items_per_query}");
-    var setting_txPerPage = parseInt("#{settings.index_page.transaction_table.items_per_page}");
-    var lengthMenuOptsAdd = !{JSON.stringify(settings.index_page.transaction_table.page_length_options)};
-    var lengthMenuOpts = [];
-    var addedLength = false;
+    let setting_maxTxCount = parseInt("#{settings.api_page.public_apis.ext.getlasttxs.max_items_per_query}");
+    let setting_txPerPage = parseInt("#{settings.index_page.transaction_table.items_per_page}");
+    let lengthMenuOptsAdd = !{JSON.stringify(settings.index_page.transaction_table.page_length_options)};
+    let lengthMenuOpts = [];
+    let addedLength = false;
     for (i = 0; i < lengthMenuOptsAdd.length; i++) {
       if (setting_maxTxCount >= lengthMenuOptsAdd[i]) {
         if (!addedLength) {
@@ -31,11 +31,11 @@ block content
     if (!addedLength && setting_txPerPage > setting_maxTxCount && setting_maxTxCount != lengthMenuOpts[lengthMenuOpts.length - 1])
       lengthMenuOpts.push(setting_maxTxCount);
     if (setting_maxTxCount < setting_txPerPage)
-      var displayLengthMax = setting_maxTxCount;
+      let displayLengthMax = setting_maxTxCount;
     else
-      var displayLengthMax = setting_txPerPage;
+      let displayLengthMax = setting_txPerPage;
     $(document).ready(function() {
-      var rtable = $('#recent-table').dataTable({
+      let rtable = $('#recent-table').dataTable({
         autoWidth: false,
         searching: false,
         ordering: false,
@@ -131,7 +131,7 @@ block content
           $('span#lastUpdatedDate').html(' N/A');
       }
 
-      var setting_reload_table_seconds = parseInt("#{settings.index_page.transaction_table.reload_table_seconds}");
+      let setting_reload_table_seconds = parseInt("#{settings.index_page.transaction_table.reload_table_seconds}");
       if (setting_reload_table_seconds > 0) {
         setInterval(function () {
           rtable.api().ajax.reload(null, false);
@@ -150,7 +150,7 @@ block content
       }
 
       if ('#{settings.index_page.page_header.show_last_updated}' == 'true') {
-        var lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
+        let lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
         update_last_updated(lastUpdatedDate);
       }
       if (#{settings.shared_pages.page_header.page_title_image.enable_animation} == true && #{settings.index_page.page_header.show_img} == true)
@@ -194,7 +194,7 @@ block content
       .card-header
         strong #{settings.localization.ex_latest_transactions}
       table#recent-table.table.table-bordered.table-striped.table-paging.table-hover
-        - var theadClasses = [];
+        - let theadClasses = [];
         if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
           - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
         thead

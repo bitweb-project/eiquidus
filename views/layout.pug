@@ -37,9 +37,9 @@ html(lang='en')
     //- https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.10.1/browser/overlayscrollbars.browser.es6.min.js
     script(type='text/javascript', src='/js/overlayscrollbars.browser.es6.min.js', integrity='sha512-bDTkSDb0/IRzL9tINJGwc2iQwmqVF3X9y7Doo7ZWvtfUM0y8Wuw1yqbYSPCBfVUBun64XIyPfXStDf9vc7cR8Q==', crossorigin='anonymous')
     script(type='text/javascript', src='/js/custom.js') 
-    - var showPanels = false
-    - var showNethashChart = false
-    - var showDifficultyChart = false
+    - let showPanels = false
+    - let showNethashChart = false
+    - let showDifficultyChart = false
     case active
       when 'home'
         if settings.index_page.show_panels == true
@@ -119,8 +119,8 @@ html(lang='en')
         if settings.claim_address_page.show_difficulty_chart == true
           - showDifficultyChart = true
         if settings.claim_address_page.enable_captcha == true
-          - var selected_captcha_object = null
-          - var selected_captcha_name = ''
+          - let selected_captcha_object = null
+          - let selected_captcha_name = ''
           each captcha, name in settings.captcha
             if selected_captcha_object == null && captcha != null && captcha.enabled == true
               - selected_captcha_object = captcha
@@ -148,7 +148,7 @@ html(lang='en')
         if settings.blockchain_specific.heavycoin.reward_page.show_difficulty_chart == true
           - showDifficultyChart = true
       default
-        - var found_plugin = false
+        - let found_plugin = false
         each plugin in settings.plugins.allowed_plugins
           if plugin != null && plugin.enabled == true && plugin.pages != null && plugin.pages.length > 0
             each pg in plugin.pages
@@ -191,7 +191,7 @@ html(lang='en')
     if showNethashChart == true || showDifficultyChart == true
       //- https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js
       script(type='text/javascript', src='/js/chartjs-plugin-annotation.min.js', integrity='sha512-8MntMizyPIYkcjoDkYqgrQOuWOZsp92zlZ9d7M2RCG0s1Zua8H215p2PdsxS7qg/4hLrHrdPsZgVZpXheHYT+Q==', crossorigin='anonymous')
-    - var sideBarClasses = [];
+    - let sideBarClasses = [];
     if settings.shared_pages.page_header.bgcolor != null && settings.shared_pages.page_header.bgcolor != ''
       - sideBarClasses.push('bg-' + settings.shared_pages.page_header.bgcolor);
       if settings.shared_pages.page_header.bgcolor.toString().toLowerCase() == 'dark' || settings.shared_pages.page_header.bgcolor.toString().toLowerCase() == 'light'
@@ -199,13 +199,13 @@ html(lang='en')
     else
       - sideBarClasses.push('bg-primary');
       - sideBarClasses.push('navbar-dark');
-    - var showNetworkPanel = false
-    - var market_currency = (settings.markets_page.market_price == 'COINGECKO' ? (settings.markets_page.coingecko_currency == null || settings.markets_page.coingecko_currency == '' ? '' : settings.markets_page.coingecko_currency) : (settings.markets_page.default_exchange.trading_pair != null && settings.markets_page.default_exchange.trading_pair.indexOf('/') > -1 ? settings.markets_page.default_exchange.trading_pair.split('/')[1] : '')).toUpperCase();
+    - let showNetworkPanel = false
+    - let market_currency = (settings.markets_page.market_price == 'COINGECKO' ? (settings.markets_page.coingecko_currency == null || settings.markets_page.coingecko_currency == '' ? '' : settings.markets_page.coingecko_currency) : (settings.markets_page.default_exchange.trading_pair != null && settings.markets_page.default_exchange.trading_pair.indexOf('/') > -1 ? settings.markets_page.default_exchange.trading_pair.split('/')[1] : '')).toUpperCase();
     if settings.panel1 == 'network_panel' || settings.panel2 == 'network_panel' || settings.panel3 == 'network_panel' || settings.panel4 == 'network_panel' || settings.panel5 == 'network_panel'
       - showNetworkPanel = true
     script.
       const { OverlayScrollbars } = OverlayScrollbarsGlobal;
-      var isDocumentReady = false;
+      let isDocumentReady = false;
 
       /* special thanks to the stackoverflow community for the getParameterByName function: https://stackoverflow.com/a/901144/3038650 */
       function getParameterByName(name, url = window.location.href) {
@@ -1393,10 +1393,10 @@ html(lang='en')
             });
           });
         });
-    - var bodyClasses = [];
-    - var bodyContainerClasses = [];
-    - var mainContainerClasses = [];
-    - var mainContainerChildClasses = [];
+    - let bodyClasses = [];
+    - let bodyContainerClasses = [];
+    - let mainContainerClasses = [];
+    - let mainContainerChildClasses = [];
     if settings.shared_pages.page_header.menu == 'side'
       - bodyContainerClasses.push('transition05s');
       - bodyContainerClasses.push('displayFlex');
@@ -1415,9 +1415,9 @@ html(lang='en')
       else
         - bodyContainerClasses.push('marginTop20');
   body(class=bodyClasses)
-    - var headerClasses = [];
-    - var footerClasses = ['nav','navbar','navbar-default','d-flex','footer'];
-    - var dropdownClasses = ['dropdown-menu'];
+    - let headerClasses = [];
+    - let footerClasses = ['nav','navbar','navbar-default','d-flex','footer'];
+    - let dropdownClasses = ['dropdown-menu'];
     if settings.shared_pages.page_header.sticky_header == true
       - headerClasses.push('fixed-top');
     if settings.shared_pages.page_footer.sticky_footer == true
@@ -1707,7 +1707,7 @@ html(lang='en')
                       input.form-control(type='text', name='search', placeholder=settings.localization.ex_search_message, style='min-width:80%;margin-right:5px;')
                       button.btn.btn-success(type='submit') #{settings.localization.ex_search_button}
           if showNethashChart == true || showDifficultyChart == true
-            - var chartColumnClass = 'col-lg-12';
+            - let chartColumnClass = 'col-lg-12';
             .container(style='padding-left:0;padding-right:0;')
               .row.align-items-start
                 if showNethashChart == true && showDifficultyChart == true && settings.shared_pages.page_header.network_charts.nethash_chart.full_row == false && settings.shared_pages.page_header.network_charts.difficulty_chart.full_row == false

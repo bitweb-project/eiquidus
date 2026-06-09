@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-var HeavySchema = new Schema({
+let HeavySchema = new Schema({
   coin: { type: String },
   lvote: { type: Number, default: 0 },
   reward: { type: Number, default: 0 },

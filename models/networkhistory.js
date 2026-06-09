@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
    Schema = mongoose.Schema;
 
-var NetworkHistorySchema = new Schema({
+let NetworkHistorySchema = new Schema({
   blockindex: {type: Number, default: 0, index: true},
   nethash: { type: Number, default: 0 },
   difficulty_pow: { type: Number, default: 0 },

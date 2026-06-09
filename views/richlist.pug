@@ -61,7 +61,7 @@ block content
           }
         });
       });
-  - var theadClasses = [];
+  - let theadClasses = [];
   if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
     - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
   if settings.richlist_page.page_header.show_img == true || settings.richlist_page.page_header.show_title == true || settings.richlist_page.page_header.show_last_updated == true || settings.richlist_page.page_header.show_description == true
@@ -180,8 +180,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[0] + ';'))
                     span #{settings.localization.rl_top25}
-                  - var totalParts = dista.totalFixed.split('.');
-                  - var percentParts = dista.percentFixed.split('.');
+                  - let totalParts = dista.totalFixed.split('.');
+                  - let percentParts = dista.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -190,8 +190,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[1] + ';'))
                     span #{settings.localization.rl_top50}
-                  - var totalParts = distb.totalFixed.split('.');
-                  - var percentParts = distb.percentFixed.split('.');
+                  - let totalParts = distb.totalFixed.split('.');
+                  - let percentParts = distb.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -200,8 +200,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[2] + ';'))
                     span #{settings.localization.rl_top75}
-                  - var totalParts = distc.totalFixed.split('.');
-                  - var percentParts = distc.percentFixed.split('.');
+                  - let totalParts = distc.totalFixed.split('.');
+                  - let percentParts = distc.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -210,8 +210,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[3] + ';'))
                     span #{settings.localization.rl_top100}
-                  - var totalParts = distd.totalFixed.split('.');
-                  - var percentParts = distd.percentFixed.split('.');
+                  - let totalParts = distd.totalFixed.split('.');
+                  - let percentParts = distd.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -219,8 +219,8 @@ block content
                 tr.text-end
                   td.fw-bold
                     span #{settings.localization.total_top_100}
-                  - var totalParts = distsubtotal.totalFixed.split('.');
-                  - var percentParts = distsubtotal.percentFixed.split('.');
+                  - let totalParts = distsubtotal.totalFixed.split('.');
+                  - let percentParts = distsubtotal.percentFixed.split('.');
                   td.text-center.fw-bold.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.fw-bold.text-center #{percentParts[0]}.
@@ -229,8 +229,8 @@ block content
                   td.fw-bold
                     div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[4] + ';'))
                     span 101+
-                  - var totalParts = diste.totalFixed.split('.');
-                  - var percentParts = diste.percentFixed.split('.');
+                  - let totalParts = diste.totalFixed.split('.');
+                  - let percentParts = diste.percentFixed.split('.');
                   td.text-center.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.text-center #{percentParts[0]}.
@@ -240,8 +240,8 @@ block content
                     td.fw-bold
                       div.float-start.wealth-dist-color-box(style=('background-color:' + settings.richlist_page.wealth_distribution.colors[5] + ';'))
                       span Burned Coins
-                    - var totalParts = burned.totalFixed.split('.');
-                    - var percentParts = burned.percentFixed.split('.');
+                    - let totalParts = burned.totalFixed.split('.');
+                    - let percentParts = burned.percentFixed.split('.');
                     td.text-center.breakWord #{totalParts[0]}.
                       span.decimal.breakWord #{totalParts[1]}
                     td.text-center #{percentParts[0]}.
@@ -249,8 +249,8 @@ block content
                 tr.text-end
                   td.fw-bold
                     span #{settings.localization.total}
-                  - var totalParts = disttotal.totalFixed.split('.');
-                  - var percentParts = disttotal.percentFixed.split('.');
+                  - let totalParts = disttotal.totalFixed.split('.');
+                  - let percentParts = disttotal.percentFixed.split('.');
                   td.text-center.fw-bold.breakWord #{totalParts[0]}.
                     span.decimal.breakWord #{totalParts[1]}
                   td.fw-bold.text-center #{percentParts[0]}.

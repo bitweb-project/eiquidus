@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'),
+let mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var MasternodeSchema = new Schema({
+let MasternodeSchema = new Schema({
   rank: { type: Number, default: 0 },
   network: { type: String, default: "" },
   txhash: { type: String, default: "" },

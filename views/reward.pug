@@ -16,7 +16,7 @@ block content
       });
 
       if ('#{settings.blockchain_specific.heavycoin.reward_page.page_header.show_last_updated}' == 'true') {
-        var lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
+        let lastUpdatedDate = #{(last_updated == null || last_updated == '0' ? 0 : last_updated)};
 
         if (lastUpdatedDate != 0) {
           $('span#lastUpdatedDate').html(' ' + format_unixtime(lastUpdatedDate));
@@ -63,7 +63,7 @@ block content
           strong #{settings.localization.heavy_reward_voting_info}
             span.small.fw-normal  (#{settings.coin.symbol})
         table#reward-summary.table.table-bordered.table-striped.summary-table.single-row-table(style='border-top:0;border-bottom:0;margin-top:0 !important;')
-          - var theadClasses = [];
+          - let theadClasses = [];
           if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
             - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
           thead
@@ -77,10 +77,10 @@ block content
               th.text-center #{settings.localization.heavy_reward}
               th.text-center #{settings.localization.heavy_estnext}
           tbody
-            - var splitSupply = heavy.supplyFixed.split('.');
-            - var splitCap = heavy.capFixed.split('.');
-            - var splitReward = heavy.rewardFixed.split('.');
-            - var splitNext = heavy.estnextFixed.split('.');
+            - let splitSupply = heavy.supplyFixed.split('.');
+            - let splitCap = heavy.capFixed.split('.');
+            - let splitReward = heavy.rewardFixed.split('.');
+            - let splitNext = heavy.estnextFixed.split('.');
             tr
               td.text-center #{splitSupply[0]}.
                 span.decimal #{splitSupply[1]}
@@ -101,8 +101,8 @@ block content
           div.text-center
             canvas.d-inline(id="rewardChange", width="150", height="150" style="max-width:150px;max-height:150px;")
               script.
-                var ctx = document.getElementById("rewardChange").getContext("2d");
-                var data = {
+                let ctx = document.getElementById("rewardChange").getContext("2d");
+                let data = {
                   labels: [
                     "Est. Next",
                     "Current Reward"
@@ -114,7 +114,7 @@ block content
                     }
                   ]
                 };
-                var options = {
+                let options = {
                   plugins: {
                     legend: {
                       display: false
@@ -153,8 +153,8 @@ block content
             .div
               canvas.d-inline(id="lastVotes", width="800", height="300", style="margin-left:-30px;margin-top:30px;max-width:800px;")
                 script.
-                  var ctx = document.getElementById("lastVotes").getContext("2d");
-                  var options = {
+                  let ctx = document.getElementById("lastVotes").getContext("2d");
+                  let options = {
                     plugins: {
                       legend: {
                         display: false
@@ -176,7 +176,7 @@ block content
                       tension: 0
                     }
                   };
-                  var data = {
+                  let data = {
                     labels: [#{(votes.length > 0 ? votes[0].count : 0)},#{(votes.length > 1 ? votes[1].count : 0)},#{(votes.length > 2 ? votes[2].count : 0)},#{(votes.length > 3 ? votes[3].count : 0)},#{(votes.length > 4 ? votes[4].count : 0)},#{(votes.length > 5 ? votes[5].count : 0)},#{(votes.length > 6 ? votes[6].count : 0)},#{(votes.length > 7 ? votes[7].count : 0)},#{(votes.length > 8 ? votes[8].count : 0)},#{(votes.length > 9 ? votes[9].count : 0)},#{(votes.length > 10 ? votes[10].count : 0)},#{(votes.length > 11 ? votes[11].count : 0)},#{(votes.length > 12 ? votes[12].count : 0)},#{(votes.length > 13 ? votes[13].count : 0)},#{(votes.length > 14 ? votes[14].count : 0)},#{(votes.length > 15 ? votes[15].count : 0)},#{(votes.length > 16 ? votes[16].count : 0)},#{(votes.length > 17 ? votes[17].count : 0)},#{(votes.length > 18 ? votes[18].count : 0)},#{(votes.length > 19 ? votes[19].count : 0)}],
                     datasets: [
                       {
@@ -195,4 +195,4 @@ block content
                       }
                     ]
                   };
-                  var myNewChart = new Chart(ctx, { type: 'line', data: data, options: options });
+                  let myNewChart = new Chart(ctx, { type: 'line', data: data, options: options });

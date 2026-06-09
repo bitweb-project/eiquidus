@@ -2,9 +2,9 @@ extends layout
 
 block content
   script.
-    var setting_txPerPage = parseInt("#{settings.masternodes_page.masternode_table.items_per_page}");
-    var lengthMenuOpts = !{JSON.stringify(settings.masternodes_page.masternode_table.page_length_options)};
-    var addedLength = false;
+    let setting_txPerPage = parseInt("#{settings.masternodes_page.masternode_table.items_per_page}");
+    let lengthMenuOpts = !{JSON.stringify(settings.masternodes_page.masternode_table.page_length_options)};
+    let addedLength = false;
     for (i = 0; i < lengthMenuOpts.length; i++) {
       if (!addedLength) {
         if (lengthMenuOpts[i] > setting_txPerPage) {
@@ -18,15 +18,15 @@ block content
       lengthMenuOpts.push(setting_txPerPage);
     function secondsToHms(d) {
         d = Number(d);
-        var h = Math.floor(d / 3600);
-        var m = Math.floor(d % 3600 / 60);
-        var s = Math.floor(d % 3600 % 60);
-        var dy = Math.floor(h / 24);
-        var h = h % 24;
+        let h = Math.floor(d / 3600);
+        let m = Math.floor(d % 3600 / 60);
+        let s = Math.floor(d % 3600 % 60);
+        let dy = Math.floor(h / 24);
+        let h = h % 24;
         return ('0' + dy).slice(-2) + " day" + (('0' + dy).slice(-2) == 1 ? "" : "s") + " " + ('0' + h).slice(-2) + "h " + ('0' + m).slice(-2) + "m " + ('0' + s).slice(-2) + "s";
     }
     $(document).ready(function() {
-      var enabled_columns = {
+      let enabled_columns = {
         rank: false,
         network: false,
         status : false,
@@ -38,8 +38,8 @@ block content
         ip_address: false,
         last_paid_block: false
       };
-      var labels = !{JSON.stringify(settings.labels)};
-      var ctable = $('#masternodes-table').dataTable({
+      let labels = !{JSON.stringify(settings.labels)};
+      let ctable = $('#masternodes-table').dataTable({
         autoWidth: true,
         searching: true,
         ordering: true,
@@ -90,7 +90,7 @@ block content
               if (json[i]['addr'] != null && json[i]['addr'] != '')
                 enabled_columns.addr = true;
 
-              var addr = json[i]['addr'];
+              let addr = json[i]['addr'];
 
               if (json[i]['lastseen'] != null)
                 json[i]['lastseen'] = '<span' + (#{settings.shared_pages.date_time.enable_alt_timezone_tooltips} == true ? ' data-bs-toggle="tooltip" data-bs-placement="auto" title="' + format_unixtime(json[i]['lastseen'], true) + '"' : '') + '>' + format_unixtime(json[i]['lastseen']) + '</span>';
@@ -221,7 +221,7 @@ block content
       .card-header
         strong Masternode List
       table#masternodes-table.table.table-bordered.table-striped.table-paging.table-hover
-        - var theadClasses = [];
+        - let theadClasses = [];
         if settings.shared_pages.table_header_bgcolor != null && settings.shared_pages.table_header_bgcolor != ''
           - theadClasses.push('table-' + settings.shared_pages.table_header_bgcolor);
         thead
