@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const settings = require('../lib/settings');
 const db = require('../lib/database');
 const lib = require('../lib/explorer');
@@ -494,7 +495,16 @@ router.get('/markets/:market/:coin_symbol/:pair_symbol', function(req, res) {
           return;
         }
 
-        const market_data = require('../lib/markets/' + market_id);
+        // Resolve absolute path and verify it stays within lib/markets/ (defense-in-depth).
+        // CodeQL-recognised pattern: path.resolve + startsWith guard eliminates path traversal
+        // even if the whitelist or regex above were somehow bypassed.
+        const marketsDir = path.resolve(__dirname, '..', 'lib', 'markets');
+        const safeMarketPath = path.resolve(marketsDir, market_id);
+        if (!safeMarketPath.startsWith(marketsDir + path.sep)) {
+          route_get_txlist(res, null);
+          return;
+        }
+        const market_data = require(safeMarketPath);
         let isAlt = false;
         let url = '';
 
