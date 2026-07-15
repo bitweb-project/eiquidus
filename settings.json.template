@@ -1544,7 +1544,7 @@
       "type": "success",
       // url: The url the label should navigate to when clicked. Ex: http://example.com
       //      NOTE: Leave the value blank ( "" ) to prevent hyperlinking the label
-      "url": "https://bitwebcore.net/about"
+      "url": "https://bitwebcore.net/en/about"
     },
     // A collection of settings that pertain to the EXorBurnAddressXXXXXXXXXXXXXW7cDZQ wallet address
     // NOTE: Change this value to the wallet address that you would like to set a custom label on
