@@ -1398,7 +1398,7 @@ if (lib.is_locked([database]) == false) {
                 address = rawAddr.replace(/^\[|\]$/g, '');
               }
 
-              // skip loopback and private addresses - they cannot be geolocated and should not be stored as peers
+              // skip loopback and private addresses - they should not be stored as peers
               const isLoopback = (address === '127.0.0.1' || address === '::1' || address.toLowerCase() === 'localhost');
               const isPrivate = /^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)/.test(address);
 
@@ -1439,8 +1439,6 @@ if (lib.is_locked([database]) == false) {
                     port: port,
                     protocol: peer.protocol,
                     version: peer.version,
-                    country: peer.country,
-                    country_code: peer.country_code,
                     ipv6: (address && address.length > 15)
                   });
 
@@ -1473,43 +1471,18 @@ if (lib.is_locked([database]) == false) {
 
                   // check if any peers should be saved
                   if (newPeers.length > 0) {
-                    // set up the rate limit library to limit how fast external api calls are made
-                    const rateLimitLib = require('../lib/ratelimit');
-                    const rateLimit = new rateLimitLib.RateLimit(1, settings.sync.rate_limit.peer_sync_rate_limit, false);
+                    // add peers to peer array
+                    peerList = peerList.concat(newPeers);
+                    console.log('Add new peer %s%s [%s/%s]', address, (port == null || port == '' ? '' : ':' + port.toString()), (i + 1).toString(), body.length.toString());
 
-                    // wait before running the external geo location api call below
-                    rateLimit.schedule(function() {
-                      // call an external geo location api to determine which country the current peer is from
-                      lib.get_geo_location(address, function(error, geo) {
-                        // check if an error was returned
-                        if (error) {
-                          console.log(error);
-                          exit(1);
-                        } else if (geo == null || typeof geo != 'object') {
-                          console.log(`Error: geolocation api returned unexpected results for ip address ${address}`);
-                          exit(1);
-                        } else {
-                          // add the geolocation data to the new peer record(s)
-                          newPeers.forEach(function (newPeer) {
-                            newPeer.country = geo.country_name;
-                            newPeer.country_code = geo.country_code;
-                          });
-                          
-                          // add peers to peer array
-                          peerList = peerList.concat(newPeers);
-                          console.log('Add new peer %s%s [%s/%s]', address, (port == null || port == '' ? '' : ':' + port.toString()), (i + 1).toString(), body.length.toString());
-
-                          // check if the script is stopping
-                          if (stopSync) {
-                            // stop the loop
-                            loop({});
-                          } else {
-                            // move to next peer
-                            loop();
-                          }
-                        }
-                      });
-                    });
+                    // check if the script is stopping
+                    if (stopSync) {
+                      // stop the loop
+                      loop({});
+                    } else {
+                      // move to next peer
+                      loop();
+                    }
                   } else {
                     console.log('Skip peer %s%s [%s/%s]', address, (port == null || port == '' ? '' : ':' + port.toString()), (i + 1).toString(), body.length.toString());
 

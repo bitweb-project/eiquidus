@@ -38,7 +38,6 @@ block content
 
           columns.push({ data: 'protocol', width: column_width });
           columns.push({ data: 'version', width: column_width });
-          columns.push({ data: 'country', width: column_width });
 
           $('#connections-table').dataTable({
             autoWidth: true,
@@ -59,7 +58,6 @@ block content
             },
             data: peers.connection_peers,
             rowCallback: function (row, data, index) {
-              const flagBlock = (data['country_code'].length > 1 ? '<span class="margin-left-5 fi fi-'+data['country_code'].toLowerCase()+'"></span>' : '');
               let colIndex = 1;
 
               $("td:eq(0)", row).html(data['address']).addClass('breakWord');
@@ -71,7 +69,6 @@ block content
 
               $(`td:eq(${colIndex})`, row).html(data['protocol']);
               $(`td:eq(${colIndex + 1})`, row).html(data['version']);
-              $(`td:eq(${colIndex + 2})`, row).html(data['country'] + flagBlock);
             },
             fnDrawCallback: function(settings) {
               fixDataTableColumns();
@@ -253,7 +250,6 @@ block content
                     th.text-center='Port'
                   th.text-center #{settings.localization.net_protocol}
                   th.text-center #{settings.localization.net_subversion}
-                  th.text-center #{settings.localization.net_country}
               tbody.text-center
       if settings.network_page.addnodes_table.enabled || settings.network_page.onetry_table.enabled
         #addnodes.container.tab-pane(class=(settings.network_page.connections_table.enabled ? '' : 'active'), style='margin-top:0;border-top:0;')

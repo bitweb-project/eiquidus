@@ -7,8 +7,6 @@ let PeersSchema = new Schema({
   port: { type: String, default: "" },
   protocol: { type: String, default: "" },
   version: { type: String, default: "" },
-  country: { type: String, default: "" },
-  country_code: { type: String, default: "" },
   ipv6: { type: Boolean, default: false },
   table_type: {
     type:    String,
